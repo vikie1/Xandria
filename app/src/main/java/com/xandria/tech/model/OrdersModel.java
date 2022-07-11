@@ -16,8 +16,8 @@ public class OrdersModel implements Parcelable {
     private String bookImageUrl;
     private String userId;
     private String hostLocationUserId;
-    private Location hostAddress; // Pick up location
-    private Location dropLocation; // Buyer Location
+    private Location hostAddress;
+    private Location dropLocation;
     private String buyerUserId;
     private String dateOrdered;
     private String deliveryContact;
