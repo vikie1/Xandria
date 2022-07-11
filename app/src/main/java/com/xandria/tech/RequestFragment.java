@@ -65,6 +65,7 @@ public class RequestFragment extends Fragment implements BookRecyclerAdapter.Boo
                     (dialog, which) -> {
                         Intent intent = new Intent(context, AddBookActivity.class);
                         intent.putExtra(AddBookActivity.EXTRA_IS_MANUAL_INPUT, which != 0);
+                        intent.putExtra(AddBookActivity.EXTRA_BOOK_REQUEST, true);
                         startActivity(intent);
                     }
             );
