@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() { //switched from on tart to on restart
+    protected void onStart() {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
         if(user!=null){
