@@ -115,7 +115,6 @@ public class RequestFragment extends Fragment implements BookRecyclerAdapter.Boo
         alertDialog.setTitle("If you have the book, add it.");
         alertDialog.setItems(new CharSequence[]{"Add the book"},
                 (dialog, which) -> {
-            System.out.println(which);
                     if (which == 0) saveBook(bookRecyclerModelArrayList.get(position));
                 }
         );
