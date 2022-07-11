@@ -118,7 +118,7 @@ public class AddBookActivity extends AppCompatActivity {
         bookList.setOnItemClickListener((parent, view, position, id) -> {
             BookRecyclerModel googleBook = googleBooksListViewAdapter.getItem(position);
             googleBook.setUserId(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail());
-            addLocationToBook(googleBook);
+            addLocationToBook(googleBook); //
         });
     }
 
