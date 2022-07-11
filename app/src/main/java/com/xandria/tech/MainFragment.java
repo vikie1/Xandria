@@ -69,9 +69,11 @@ public class MainFragment extends Fragment implements BookRecyclerAdapter.BookCl
         bottom_sheet = view.findViewById(R.id.bottomSheet);
         mAuth = FirebaseAuth.getInstance();
 
-        CustomArrayAdapter listViewAdapter = new CustomArrayAdapter(context, Arrays.asList(Categories.categories));
-        ListView catListView = view.findViewById(R.id.categories_list);
-        catListView.setAdapter(listViewAdapter);
+        // I have commented on this part so that you can place categories as you said in the call
+        // It was still far from done so feel free to start afresh
+//        CustomArrayAdapter listViewAdapter = new CustomArrayAdapter(context, Arrays.asList(Categories.categories));
+//        ListView catListView = view.findViewById(R.id.categories_list);
+//        catListView.setAdapter(listViewAdapter);
 
         bookRecyclerModelArrayList = new ArrayList<>();
         bookRecyclerAdapter = new BookRecyclerAdapter(bookRecyclerModelArrayList, context, this);
