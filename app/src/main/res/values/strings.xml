@@ -14,7 +14,7 @@
     <string name="go_back_to_main">Go Back To Main</string>
     <string name="nav_open_drawer">Open Drawer</string>
     <string name="nav_close_drawer">Close Drawer</string>
-    <string name="book_orders">Book Orders</string>
+    <string name="book_orders">My Borrows</string>
     <string name="add_book_fab">Add Book Fab</string>
     <string name="new_order_fab">Create New Order Fab</string>
     <string name="home">Home</string>
@@ -45,10 +45,10 @@
     <string name="sign_out">Sign Out</string>
     <string name="google_search">Search name, author, category etc</string>
     <string name="logo">Logo</string>
-    <string name="my_borrowed_books">My Borrowed Books</string>
+    <string name="my_borrowed_books">Borrowed from me</string>
     <string name="return_book">Return Book</string>
     <string name="confirm_book_received">Confirm Book Received</string>
-    <string name="returned_orders">Returned Orders</string>
+    <string name="returned_orders">Books I Have Read</string>
     <string name="title_activity_returned_order">ReturnedOrderActivity</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
@@ -73,5 +73,9 @@
     <string name="books_map">Books Map</string>
     <string name="GPSAlertDialogTitle">Allow Location Access</string>
     <string name="GPSAlertDialogMessage">This app uses location permissions to get books near you</string>
-    <string name="action_settings">Ok</string>
+    <string name="action_settings">OK</string>
+    <string name="course_name">Course Name</string>
+    <string name="book_image">Book Image</string>
+    <string name="book_title_2">Book Title</string>
+    <string name="book_author">Book Author</string>
 </resources>

@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/bottomSheet"
-    android:background="@color/blue_shade">
+    android:background="@color/darker">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Course Name"
+        android:text="@string/course_name"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:id="@+id/bs_BookTitle"

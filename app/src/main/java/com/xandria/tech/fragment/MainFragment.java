@@ -79,6 +79,7 @@ public class MainFragment extends Fragment implements BookRecyclerAdapter.BookCl
         onFabClicked();
 
         getAllBooks();
+
         // Inflate the layout for this fragment
         return view;
     }
