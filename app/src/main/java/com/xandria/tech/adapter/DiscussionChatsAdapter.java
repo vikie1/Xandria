@@ -86,8 +86,6 @@ public class DiscussionChatsAdapter extends ArrayAdapter<DiscussionModel> {
             else senderRcv.setText(discussion.getSender());
         }
 
-        System.out.println("hi " + dateAndTime);
-
         return convertView;
     }
 }

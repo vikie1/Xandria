@@ -13,7 +13,7 @@
             android:layout_width="0dp"
             android:layout_weight="0.75"
             android:layout_height="wrap_content"
-            android:background="@color/teal_700"
+            android:background="@color/white"
             android:layout_gravity="start"
             android:orientation="vertical"
             android:id="@+id/received_layout">
@@ -26,6 +26,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
+                    android:textColor="@color/black"
                     android:id="@+id/sender_name"/>
 
                 <TextView
@@ -34,29 +35,20 @@
                     android:textStyle="italic"
                     android:textColor="@color/dark_sent"
                     android:id="@+id/time_sent"/>
-
             </LinearLayout>
 
-<!--            <com.google.android.material.card.MaterialCardView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                app:cardCornerRadius="15dp"-->
-<!--                android:background="@color/teal_700"-->
-<!--                android:layout_gravity="start">-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/received_chat"
+                    android:textColor="@color/black"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/received_chat"
-                        android:textColor="@color/white"/>
-
-                </LinearLayout>
-<!--            </com.google.android.material.card.MaterialCardView>-->
+            </LinearLayout>
         </LinearLayout>
 
         <Space
@@ -79,7 +71,7 @@
             android:layout_weight="0.75"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:background="@color/blue_shade"
+            android:background="@color/darker"
             android:orientation="vertical"
             android:id="@+id/sent_layout">
 
@@ -101,12 +93,6 @@
                     android:id="@+id/time"/>
 
             </LinearLayout>
-<!--            <com.google.android.material.card.MaterialCardView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:background="@color/blue_shade"-->
-<!--                app:cardCornerRadius="20dp"-->
-<!--                android:layout_gravity="end">-->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -121,7 +107,6 @@
 
                 </LinearLayout>
 
-<!--            </com.google.android.material.card.MaterialCardView>-->
         </LinearLayout>
     </LinearLayout>
 

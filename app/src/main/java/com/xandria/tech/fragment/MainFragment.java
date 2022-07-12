@@ -34,6 +34,7 @@ import com.xandria.tech.activity.book.EditBookActivity;
 import com.xandria.tech.activity.order.CreateOrderActivity;
 import com.xandria.tech.adapter.BookRecyclerAdapter;
 import com.xandria.tech.constants.FirebaseRefs;
+import com.xandria.tech.dialogues.BookDetails;
 import com.xandria.tech.model.BookRecyclerModel;
 
 import java.util.ArrayList;
@@ -137,9 +138,11 @@ public class MainFragment extends Fragment implements BookRecyclerAdapter.BookCl
     @Override
     public void onBookClick(int position) {
 //        createBottomDialog(bookRecyclerModelArrayList.get(position));
-        Intent intent = new Intent(context, BookDetailsActivity.class);
-        intent.putExtra(BookDetailsActivity.EXTRA_BOOK, bookRecyclerModelArrayList.get(position));
-        startActivity(intent);
+//        Intent intent = new Intent(context, BookDetailsActivity.class);
+//        intent.putExtra(BookDetailsActivity.EXTRA_BOOK, bookRecyclerModelArrayList.get(position));
+//        startActivity(intent);
+        BookDetails bookDetails = new BookDetails();
+        bookDetails.createDialogue(context, bookRecyclerModelArrayList.get(position)).show();
     }
 
     private void createBottomDialog(BookRecyclerModel bookRecyclerModel) {
