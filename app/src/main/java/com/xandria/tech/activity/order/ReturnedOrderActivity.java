@@ -1,22 +1,18 @@
-package com.xandria.tech;
+package com.xandria.tech.activity.order;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.text.HtmlCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
-import com.xandria.tech.constants.FirebaseRefs;
+import com.xandria.tech.MainActivity;
+import com.xandria.tech.R;
+import com.xandria.tech.activity.book.BookDiscussionActivity;
 import com.xandria.tech.model.ReturnOrdersModel;
 
 public class ReturnedOrderActivity extends AppCompatActivity {

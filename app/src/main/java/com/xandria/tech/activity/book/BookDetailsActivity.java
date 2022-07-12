@@ -1,9 +1,7 @@
-package com.xandria.tech;
+package com.xandria.tech.activity.book;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.text.HtmlCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -15,6 +13,9 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
+import com.xandria.tech.activity.order.CreateOrderActivity;
+import com.xandria.tech.MainActivity;
+import com.xandria.tech.R;
 import com.xandria.tech.model.BookRecyclerModel;
 
 import java.util.Objects;

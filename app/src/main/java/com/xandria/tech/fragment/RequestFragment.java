@@ -1,4 +1,4 @@
-package com.xandria.tech;
+package com.xandria.tech.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +22,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.xandria.tech.MainActivity;
+import com.xandria.tech.R;
+import com.xandria.tech.activity.book.AddBookActivity;
 import com.xandria.tech.adapter.BookRecyclerAdapter;
 import com.xandria.tech.constants.FirebaseRefs;
 import com.xandria.tech.model.BookRecyclerModel;

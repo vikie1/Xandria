@@ -1,4 +1,4 @@
-package com.xandria.tech;
+package com.xandria.tech.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -20,10 +19,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.xandria.tech.adapter.OrdersListViewAdapter;
+import com.xandria.tech.R;
+import com.xandria.tech.activity.order.ReturnedOrderActivity;
 import com.xandria.tech.adapter.ReturnedOrdersListViewAdapter;
 import com.xandria.tech.constants.FirebaseRefs;
-import com.xandria.tech.model.OrdersModel;
 import com.xandria.tech.model.ReturnOrdersModel;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.xandria.tech;
+package com.xandria.tech.activity.user;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.xandria.tech.MainActivity;
+import com.xandria.tech.R;
 
 import java.util.Objects;
 

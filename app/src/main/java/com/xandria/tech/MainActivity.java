@@ -3,7 +3,6 @@ package com.xandria.tech;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -14,11 +13,18 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.xandria.tech.activity.user.LoginActivity;
 import com.xandria.tech.constants.Categories;
-import com.xandria.tech.util.GoogleServices;
+import com.xandria.tech.fragment.DiscussionFragment;
+import com.xandria.tech.fragment.MainFragment;
+import com.xandria.tech.fragment.MapsFragment;
+import com.xandria.tech.fragment.MyLoanedBooksFragment;
+import com.xandria.tech.fragment.OrdersFragment;
+import com.xandria.tech.fragment.ProfileFragment;
+import com.xandria.tech.fragment.RequestFragment;
+import com.xandria.tech.fragment.ReturnedOrdersFragment;
 
 import java.util.Objects;
 

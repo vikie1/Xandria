@@ -39,37 +39,37 @@
 <!--            android:value="YOUR_API_KEY" />-->
 
         <activity
-            android:name=".BookDiscussionActivity"
+            android:name=".activity.book.BookDiscussionActivity"
             android:exported="false" />
         <activity
-            android:name=".BookDetailsActivity"
+            android:name=".activity.book.BookDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".ReturnedOrderActivity"
+            android:name=".activity.order.ReturnedOrderActivity"
             android:exported="false"
             android:label="@string/title_activity_returned_order"
             android:theme="@style/Theme.Xandria.NoActionBar" />
         <activity
-            android:name=".CreateOrderActivity"
+            android:name=".activity.order.CreateOrderActivity"
             android:exported="false" />
         <activity
-            android:name=".OrderPlacedActivity"
+            android:name=".activity.order.OrderPlacedActivity"
             android:exported="false"
             android:label="Order Placed" />
         <activity
-            android:name=".EditBookActivity"
+            android:name=".activity.book.EditBookActivity"
             android:exported="false" />
         <activity
-            android:name=".AddBookActivity"
+            android:name=".activity.book.AddBookActivity"
             android:exported="false" />
         <activity
-            android:name=".RegistrationActivity"
+            android:name=".activity.user.RegistrationActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activity.user.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

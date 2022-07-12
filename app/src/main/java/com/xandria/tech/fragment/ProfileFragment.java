@@ -1,4 +1,4 @@
-package com.xandria.tech;
+package com.xandria.tech.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +22,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.xandria.tech.R;
+import com.xandria.tech.activity.user.LoginActivity;
 import com.xandria.tech.constants.FirebaseRefs;
 import com.xandria.tech.model.User;
 

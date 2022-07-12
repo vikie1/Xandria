@@ -1,18 +1,13 @@
-package com.xandria.tech;
+package com.xandria.tech.fragment;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -32,15 +27,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
+import com.xandria.tech.R;
+import com.xandria.tech.activity.book.AddBookActivity;
+import com.xandria.tech.activity.book.BookDetailsActivity;
+import com.xandria.tech.activity.book.EditBookActivity;
+import com.xandria.tech.activity.order.CreateOrderActivity;
 import com.xandria.tech.adapter.BookRecyclerAdapter;
-import com.xandria.tech.adapter.CustomArrayAdapter;
-import com.xandria.tech.constants.Categories;
 import com.xandria.tech.constants.FirebaseRefs;
 import com.xandria.tech.model.BookRecyclerModel;
-import com.xandria.tech.model.CategoryModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class MainFragment extends Fragment implements BookRecyclerAdapter.BookClickInterface{

@@ -1,4 +1,4 @@
-package com.xandria.tech;
+package com.xandria.tech.activity.user;
 
 import static android.content.ContentValues.TAG;
 
@@ -18,6 +18,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.xandria.tech.R;
 import com.xandria.tech.constants.FirebaseRefs;
 import com.xandria.tech.model.User;
 
