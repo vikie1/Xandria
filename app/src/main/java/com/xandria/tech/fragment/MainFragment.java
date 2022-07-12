@@ -136,7 +136,10 @@ public class MainFragment extends Fragment implements BookRecyclerAdapter.BookCl
 
     @Override
     public void onBookClick(int position) {
-        createBottomDialog(bookRecyclerModelArrayList.get(position));
+//        createBottomDialog(bookRecyclerModelArrayList.get(position));
+        Intent intent = new Intent(context, BookDetailsActivity.class);
+        intent.putExtra(BookDetailsActivity.EXTRA_BOOK, bookRecyclerModelArrayList.get(position));
+        startActivity(intent);
     }
 
     private void createBottomDialog(BookRecyclerModel bookRecyclerModel) {
