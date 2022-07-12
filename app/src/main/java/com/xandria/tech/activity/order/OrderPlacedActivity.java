@@ -24,6 +24,9 @@ import com.xandria.tech.activity.book.BookDiscussionActivity;
 import com.xandria.tech.constants.FirebaseRefs;
 import com.xandria.tech.model.OrdersModel;
 import com.xandria.tech.model.ReturnOrdersModel;
+import com.xandria.tech.util.DateUtils;
+
+import java.time.LocalDateTime;
 
 public class OrderPlacedActivity extends AppCompatActivity {
     public static final String EXTRA_ORDER = "order";
@@ -96,10 +99,25 @@ public class OrderPlacedActivity extends AppCompatActivity {
                 getString(R.string.ordered_from).concat(" ").concat(order.getHostLocationUserId()),
                 HtmlCompat.FROM_HTML_MODE_COMPACT
         ));
-        dateOrdered.setText(HtmlCompat.fromHtml(
-                getString(R.string.date_ordered).concat(" ").concat(order.getDateOrdered()),
+        String dateAndTime = "";
+
+        try {
+            LocalDateTime localDateTime = LocalDateTime.parse(order.getDateOrdered());
+            dateAndTime = DateUtils.getDateTimeString(localDateTime);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        if (dateAndTime.trim().equals(""))
+            dateOrdered.setText(HtmlCompat.fromHtml(
+                    getString(R.string.date_ordered).concat(" ").concat(order.getDateOrdered()),
+                    HtmlCompat.FROM_HTML_MODE_COMPACT
+            ));
+        else
+            dateOrdered.setText(HtmlCompat.fromHtml(
+                getString(R.string.date_ordered).concat(" ").concat(dateAndTime),
                 HtmlCompat.FROM_HTML_MODE_COMPACT
-        ));
+            ));
         Picasso.get().load(order.getBookImageUrl()).into(bookImage);
     }
 

@@ -84,6 +84,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         if (selectedCountryCode == null || selectedCountryCode.equals(""))
             selectedCountryCode = ccp.getSelectedCountryCodeWithPlus();
         newOrder.setDeliveryContact(selectedCountryCode + contact);
+        newOrder.setDateOrdered();
         newOrder.setDropLocation(dropLocation);
         firebaseDatabaseRef.child(newOrder.getOrderId()).child(newOrder.getBookId()).setValue(newOrder);
         Toast.makeText(CreateOrderActivity.this, "Order Created", Toast.LENGTH_LONG).show();

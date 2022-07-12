@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.xandria.tech.MainActivity;
 import com.xandria.tech.R;
+import com.xandria.tech.constants.LoggedInUser;
 
 import java.util.Objects;
 
@@ -45,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
                 mAuth.signInWithEmailAndPassword(emailStr, passwordStr).addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
                         Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                        LoggedInUser.getInstance(this).init();
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         finish();
                     }else{
@@ -61,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
         if(user!=null){
+            LoggedInUser.getInstance(this).init();
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             this.finish();
         }

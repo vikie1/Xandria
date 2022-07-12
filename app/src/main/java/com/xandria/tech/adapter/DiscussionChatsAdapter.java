@@ -14,10 +14,19 @@ import androidx.annotation.Nullable;
 import com.google.firebase.auth.FirebaseAuth;
 import com.xandria.tech.R;
 import com.xandria.tech.model.DiscussionModel;
+import com.xandria.tech.util.DateUtils;
 
-import org.w3c.dom.Text;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class DiscussionChatsAdapter extends ArrayAdapter<DiscussionModel> {
@@ -43,19 +52,41 @@ public class DiscussionChatsAdapter extends ArrayAdapter<DiscussionModel> {
         TextView senderRcv = convertView.findViewById(R.id.sender_name);
         TextView senderSnt = convertView.findViewById(R.id.sender);
 
+        String dateAndTime = "";
+
+        try {
+            LocalDateTime localDateTime = LocalDateTime.parse(discussion.getTimeSent());
+            dateAndTime = DateUtils.getDateTimeString(localDateTime);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
         receivedLayout.setVisibility(View.VISIBLE);
         sentLayout.setVisibility(View.VISIBLE);
         if (discussion.getSender().equals(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail())){
             receivedLayout.setVisibility(View.GONE);
             sent.setText(discussion.getMessage());
-            timeSentSnt.setText(discussion.getTimeSent());
-            senderSnt.setText(discussion.getSender());
+
+            if (dateAndTime.trim().equals(""))
+                timeSentSnt.setText(discussion.getTimeSent());
+            else timeSentSnt.setText(dateAndTime);
+
+            if (discussion.getSenderName() != null && !discussion.getSenderName().equals(""))
+                senderSnt.setText(discussion.getSenderName());
+            else senderSnt.setText(discussion.getSender());
         } else {
             sentLayout.setVisibility(View.GONE);
             received.setText(discussion.getMessage());
-            timeSentRcv.setText(discussion.getTimeSent());
-            senderRcv.setText(discussion.getSender());
+            if (dateAndTime.trim().equals(""))
+                timeSentRcv.setText(discussion.getTimeSent());
+            else timeSentRcv.setText(dateAndTime);
+
+            if (discussion.getSenderName() != null && !discussion.getSenderName().equals(""))
+                senderRcv.setText(discussion.getSenderName());
+            else senderRcv.setText(discussion.getSender());
         }
+
+        System.out.println("hi " + dateAndTime);
 
         return convertView;
     }

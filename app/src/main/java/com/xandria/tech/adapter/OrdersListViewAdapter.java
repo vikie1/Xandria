@@ -15,7 +15,9 @@ import androidx.core.text.HtmlCompat;
 import com.squareup.picasso.Picasso;
 import com.xandria.tech.R;
 import com.xandria.tech.model.OrdersModel;
+import com.xandria.tech.util.DateUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class OrdersListViewAdapter extends ArrayAdapter<OrdersModel> {
@@ -38,10 +40,26 @@ public class OrdersListViewAdapter extends ArrayAdapter<OrdersModel> {
                 getContext().getString(R.string.book_title).concat(" ").concat(order.getBookTitle()),
                 HtmlCompat.FROM_HTML_MODE_COMPACT
         ));
-        orderDate.setText(HtmlCompat.fromHtml(
-                getContext().getString(R.string.date_ordered).concat(" ").concat(order.getDateOrdered()),
-                HtmlCompat.FROM_HTML_MODE_COMPACT
-        ));
+
+        String dateAndTime = "";
+
+        try {
+            LocalDateTime localDateTime = LocalDateTime.parse(order.getDateOrdered());
+            dateAndTime = DateUtils.getDateTimeString(localDateTime);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        if (dateAndTime.trim().equals(""))
+            orderDate.setText(HtmlCompat.fromHtml(
+                    getContext().getString(R.string.date_ordered).concat(" ").concat(order.getDateOrdered()),
+                    HtmlCompat.FROM_HTML_MODE_COMPACT
+            ));
+        else
+            orderDate.setText(HtmlCompat.fromHtml(
+                    getContext().getString(R.string.date_ordered).concat(" ").concat(dateAndTime),
+                    HtmlCompat.FROM_HTML_MODE_COMPACT
+            ));
         Picasso.get().load(order.getBookImageUrl()).into(thumbnail);
 
         return convertView;

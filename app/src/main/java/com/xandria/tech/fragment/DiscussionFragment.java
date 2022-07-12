@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.xandria.tech.R;
 import com.xandria.tech.adapter.DiscussionChatsAdapter;
 import com.xandria.tech.constants.FirebaseRefs;
+import com.xandria.tech.constants.LoggedInUser;
 import com.xandria.tech.model.DiscussionModel;
 
 import java.util.ArrayList;
@@ -102,6 +103,7 @@ public class DiscussionFragment extends Fragment {
                 discussion.setSender(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail());
                 discussion.setMessage(messageEditText.getText().toString());
                 discussion.setTimeSent();
+                discussion.setSenderName(LoggedInUser.getInstance().getCurrentUser().getName());
 
                 firebaseDatabaseReference.push().setValue(discussion);
                 Toast.makeText(context, "Message sent", Toast.LENGTH_SHORT).show();

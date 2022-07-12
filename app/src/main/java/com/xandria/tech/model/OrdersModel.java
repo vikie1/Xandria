@@ -7,7 +7,13 @@ import androidx.annotation.NonNull;
 
 import com.xandria.tech.dto.Location;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class OrdersModel implements Parcelable {
     private String orderId;
@@ -180,9 +186,7 @@ public class OrdersModel implements Parcelable {
         isReturned = returnConfirmed;
     }
 
-    public void setDateOrdered() {
-        this.dateOrdered = Calendar.getInstance().getTime().toString();
-    }
+    public void setDateOrdered() { this.dateOrdered = LocalDateTime.now().toString(); }
 
     public void setDateOrdered(String dateOrdered) {
         this.dateOrdered = dateOrdered;
