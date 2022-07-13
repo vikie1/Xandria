@@ -37,6 +37,8 @@ public class GoogleServices {
             while ((currentLine = bufferedReader.readLine()) != null){
                 stringBuilder.append(currentLine);
             }
+            responseBody.close();
+            bufferedReader.close();
             try {
                 return parseBookRecyclerModelList(new JSONObject(stringBuilder.toString()));
             } catch (JSONException e) {

@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -87,18 +86,7 @@ public class MainFragment extends Fragment implements BookRecyclerAdapter.BookCl
 
     private void onFabClicked() {
         FloatingActionButton addFab = view.findViewById(R.id.addFab);
-        addFab.setOnClickListener(view1 -> {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(context); // allow users to select either the Google books input option or the manual input option
-            alertDialog.setTitle("Select book input option");
-            alertDialog.setItems(new CharSequence[]{"Google Books", "Manual Input"},
-                    (dialog, which) -> {
-                        Intent intent = new Intent(context, AddBookActivity.class);
-                        intent.putExtra(AddBookActivity.EXTRA_IS_MANUAL_INPUT, which != 0);
-                        startActivity(intent);
-                    }
-            );
-            alertDialog.create().show();
-        });
+        addFab.setOnClickListener(view1 -> startActivity(new Intent(context, AddBookActivity.class)));
     }
 
     private void getAllBooks() {

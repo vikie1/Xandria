@@ -30,9 +30,10 @@ public class BookDetails{
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.book_details_layout);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(R.color.black));
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.black)));
 
         populateBookView(book, dialog, context);
+        handleButtonClicks(book,dialog, context);
         return dialog;
     }
 

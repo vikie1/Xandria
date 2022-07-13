@@ -1,9 +1,5 @@
 package com.xandria.tech.activity.book;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,7 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.ViewSwitcher;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,7 +45,7 @@ public class AddBookActivity extends AppCompatActivity {
 
     GoogleBooksListViewAdapter googleBooksListViewAdapter;
     private boolean request;
-    ViewSwitcher viewSwitcher;
+//    ViewSwitcher viewSwitcher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,8 +54,8 @@ public class AddBookActivity extends AppCompatActivity {
         if (getIntent().hasExtra(EXTRA_IS_MANUAL_INPUT)
                 && (boolean) getIntent().getExtras().get(EXTRA_IS_MANUAL_INPUT)
         ) {
-            viewSwitcher = findViewById(R.id.google_books_manual_input_switch);
-            viewSwitcher.setDisplayedChild(1);
+//            viewSwitcher = findViewById(R.id.google_books_manual_input_switch);
+//            viewSwitcher.setDisplayedChild(1);
             bookTitle = findViewById(R.id.bookTitle);
             bookSubTitle = findViewById(R.id.bookSubTitle);
             bookAuthorName = findViewById(R.id.authorName);
@@ -92,6 +91,15 @@ public class AddBookActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().trim().isEmpty()) {
+                    googleBooksListViewAdapter.clear();
+                    return; // all characters are deleted so remove everything
+                }
                 new Thread(() -> {
                     List<BookRecyclerModel> newList = null;
                     try {
@@ -107,11 +115,6 @@ public class AddBookActivity extends AppCompatActivity {
                         }
                     });
                 }).start();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
             }
         });
 
