@@ -78,4 +78,6 @@
     <string name="book_image">Book Image</string>
     <string name="book_title_2">Book Title</string>
     <string name="book_author">Book Author</string>
+    <string name="cancel_button">Cancel Button</string>
+    <string name="add_location">Add Location</string>
 </resources>

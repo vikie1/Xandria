@@ -106,7 +106,6 @@ public class MainFragment extends Fragment implements BookRecyclerAdapter.BookCl
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                bookRecyclerModelArrayList.add(snapshot.getValue(BookRecyclerModel.class));
                 bookRecyclerAdapter.notifyItemRemoved(bookRecyclerModelArrayList.indexOf(snapshot.getValue(BookRecyclerModel.class)));
             }
 

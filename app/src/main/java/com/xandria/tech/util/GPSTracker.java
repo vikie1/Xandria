@@ -1,9 +1,5 @@
 package com.xandria.tech.util;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
@@ -21,6 +17,10 @@ import android.util.Log;
 
 import com.xandria.tech.R;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 /**
  * Create this Class from tutorial :
  * http://www.androidhive.info/2012/07/android-gps-location-manager-tutorial
@@ -34,7 +34,7 @@ public class GPSTracker extends Service implements LocationListener {
     // Get Class Name
     private static final String TAG = GPSTracker.class.getName();
 
-    private final Context mContext;
+    private final Context context;
 
     // flag for GPS Status
     boolean isGPSEnabled = false;
@@ -65,7 +65,7 @@ public class GPSTracker extends Service implements LocationListener {
     private String provider_info;
 
     public GPSTracker(Context context) {
-        this.mContext = context;
+        this.context = context;
         getLocation();
     }
 
@@ -75,7 +75,7 @@ public class GPSTracker extends Service implements LocationListener {
     public void getLocation() {
 
         try {
-            locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
+            locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
 
             //getting GPS status
             isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -190,7 +190,7 @@ public class GPSTracker extends Service implements LocationListener {
      * Function to show settings alert dialog
      */
     public void showSettingsAlert() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
 
         //Setting Dialog Title
         alertDialog.setTitle(R.string.GPSAlertDialogTitle);
@@ -205,7 +205,7 @@ public class GPSTracker extends Service implements LocationListener {
             public void onClick(DialogInterface dialog, int which)
             {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                mContext.startActivity(intent);
+                context.startActivity(intent);
             }
         });
 
@@ -226,10 +226,10 @@ public class GPSTracker extends Service implements LocationListener {
      * Get list of address by latitude and longitude
      * @return null or List<Address>
      */
-    public List<Address> getGeocoderAddress(Context context) {
+    public List<Address> getGeocoderAddress() {
         if (location != null) {
 
-            Geocoder geocoder = new Geocoder(context, Locale.ENGLISH);
+            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
 
             try {
                 /**
@@ -251,8 +251,8 @@ public class GPSTracker extends Service implements LocationListener {
      * Try to get AddressLine
      * @return null or addressLine
      */
-    public String getAddressLine(Context context) {
-        List<Address> addresses = getGeocoderAddress(context);
+    public String getAddressLine() {
+        List<Address> addresses = getGeocoderAddress();
 
         if (addresses != null && addresses.size() > 0) {
             Address address = addresses.get(0);
@@ -264,11 +264,11 @@ public class GPSTracker extends Service implements LocationListener {
     }
 
     /**
-     * Try to get Locality
-     * @return null or locality
+     * Try to get City
+     * @return null or city
      */
-    public String getLocality(Context context) {
-        List<Address> addresses = getGeocoderAddress(context);
+    public String getCity() {
+        List<Address> addresses = getGeocoderAddress();
 
         if (addresses != null && addresses.size() > 0) {
             Address address = addresses.get(0);
@@ -281,11 +281,45 @@ public class GPSTracker extends Service implements LocationListener {
     }
 
     /**
+     * Try to get Locality
+     * @return null or locality
+     */
+    public String getLocality() {
+        List<Address> addresses = getGeocoderAddress();
+
+        if (addresses != null && addresses.size() > 0) {
+            Address address = addresses.get(0);
+
+            return address.getAdminArea();
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
+     * Try to get Street
+     * @return null or street
+     */
+    public String getStreet() {
+        List<Address> addresses = getGeocoderAddress();
+
+        if (addresses != null && addresses.size() > 0) {
+            Address address = addresses.get(0);
+
+            return address.getThoroughfare();
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
      * Try to get Postal Code
      * @return null or postalCode
      */
-    public String getPostalCode(Context context) {
-        List<Address> addresses = getGeocoderAddress(context);
+    public String getPostalCode() {
+        List<Address> addresses = getGeocoderAddress();
 
         if (addresses != null && addresses.size() > 0) {
             Address address = addresses.get(0);
@@ -301,7 +335,7 @@ public class GPSTracker extends Service implements LocationListener {
      * @return null or postalCode
      */
     public String getCountryName(Context context) {
-        List<Address> addresses = getGeocoderAddress(context);
+        List<Address> addresses = getGeocoderAddress();
         if (addresses != null && addresses.size() > 0) {
             Address address = addresses.get(0);
 

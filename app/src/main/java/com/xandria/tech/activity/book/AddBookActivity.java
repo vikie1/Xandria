@@ -1,18 +1,19 @@
 package com.xandria.tech.activity.book;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -28,6 +29,7 @@ import com.xandria.tech.adapter.GoogleBooksListViewAdapter;
 import com.xandria.tech.constants.FirebaseRefs;
 import com.xandria.tech.dto.Location;
 import com.xandria.tech.model.BookRecyclerModel;
+import com.xandria.tech.util.GPSTracker;
 import com.xandria.tech.util.GoogleServices;
 
 import java.io.IOException;
@@ -45,7 +47,8 @@ public class AddBookActivity extends AppCompatActivity {
 
     GoogleBooksListViewAdapter googleBooksListViewAdapter;
     private boolean request;
-//    ViewSwitcher viewSwitcher;
+
+    //    ViewSwitcher viewSwitcher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,8 +72,7 @@ public class AddBookActivity extends AppCompatActivity {
         if (getIntent().hasExtra(EXTRA_BOOK_REQUEST) && (boolean) getIntent().getExtras().get(EXTRA_BOOK_REQUEST)) {
             DbReference = fireDb.getReference(FirebaseRefs.BOOK_REQUESTS);
             request = true;
-        }
-        else DbReference = fireDb.getReference(FirebaseRefs.BOOKS);
+        } else DbReference = fireDb.getReference(FirebaseRefs.BOOKS);
 
         Button cancelButton = findViewById(R.id.addBookCancelBtn);
         cancelButton.setOnClickListener(view -> startActivity(new Intent(AddBookActivity.this, MainActivity.class)));
@@ -127,62 +129,41 @@ public class AddBookActivity extends AppCompatActivity {
     }
 
     private void addLocationToBook(BookRecyclerModel book) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.location_input, null);
-        builder.setTitle("Add Book Location");
-        builder.setView(dialogView);
-        builder.setPositiveButton("Finish", (dialog, which) -> {
-            TextInputEditText streetAddress = dialogView.findViewById(R.id.street_address);
-            TextInputEditText locality = dialogView.findViewById(R.id.locality);
-            TextInputEditText city = dialogView.findViewById(R.id.city);
-            TextInputEditText pinCode = dialogView.findViewById(R.id.pin_code);
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.location_input_mode);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.black)));
 
-            Location location = new Location(AddBookActivity.this,
-                    String.valueOf(streetAddress.getText()),
-                    String.valueOf(locality.getText()),
-                    String.valueOf(city.getText()),
-                    String.valueOf(pinCode.getText())
-            );
-            book.setLocation(location);
-
-            saveBook(book);
-        });
-        builder.create().show();
+        handleChoiceDialogueButtonClicks(dialog, book);
+        dialog.show();
     }
 
-    private void saveBook(BookRecyclerModel book) {
-        DbReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (request){ // request for existing books shouldn't go through
-                    DatabaseReference reference = fireDb.getReference(FirebaseRefs.BOOKS).child(book.getBookID());
-                    reference.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (!snapshot.exists()){
-                                DbReference.child(book.getBookID()).setValue(book);
-                                Toast.makeText(AddBookActivity.this, "New Request Added..", Toast.LENGTH_SHORT).show();
-                                onBackPressed();
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            Toast.makeText(AddBookActivity.this, "An error occurred", Toast.LENGTH_LONG).show();
-                        }
-                    });
-                } else {
-                    DbReference.child(book.getBookID()).setValue(book);
-                    Toast.makeText(AddBookActivity.this, "Book Added..", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(AddBookActivity.this, MainActivity.class));
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(AddBookActivity.this, "Failed to Add Book! Error: "+ error, Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void saveBook(BookRecyclerModel book) {
+        if (request) { // request for existing books shouldn't go through
+            DatabaseReference reference = fireDb.getReference(FirebaseRefs.BOOKS).child(book.getBookID());
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (!snapshot.exists()) {
+                        DbReference.child(book.getBookID()).setValue(book);
+                        Toast.makeText(AddBookActivity.this, "New Request Added..", Toast.LENGTH_SHORT).show();
+                        onBackPressed();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(AddBookActivity.this, "An error occurred", Toast.LENGTH_LONG).show();
+                }
+            });
+        } else {
+            DbReference.child(book.getBookID()).setValue(book);
+            Toast.makeText(AddBookActivity.this, "Book Added..", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(AddBookActivity.this, MainActivity.class));
+            AddBookActivity.this.finish();
+        }
     }
 
     void onAddBookClicked(){
@@ -203,4 +184,82 @@ public class AddBookActivity extends AppCompatActivity {
             addLocationToBook(booksModel);
         });
     }
+
+    private void handleChoiceDialogueButtonClicks(Dialog dialog, BookRecyclerModel book) {
+        ImageButton cancelButton = dialog.findViewById(R.id.cancel_button);
+        Button useCurrent = dialog.findViewById(R.id.use_current);
+        Button useNew = dialog.findViewById(R.id.use_preferred);
+
+        cancelButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            Toast.makeText(AddBookActivity.this, "Location is needed to save book", Toast.LENGTH_LONG).show();
+        });
+        useCurrent.setOnClickListener(v -> {
+            Location location = getCurrentLoc();
+            if (location != null) {
+                book.setLocation(location);
+                saveBook(book);
+            }
+            else Toast.makeText(AddBookActivity.this, "Location is permissions are needed to proceed", Toast.LENGTH_LONG).show();
+        });
+        useNew.setOnClickListener(v ->{
+            dialog.dismiss();
+            switchToManualLocationEntry(book);
+        });
+    }
+
+    private void switchToManualLocationEntry(BookRecyclerModel book) {
+        Dialog dialog = new Dialog(AddBookActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.location_input);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.black)));
+
+        TextInputEditText streetAddress = dialog.findViewById(R.id.street_address);
+        TextInputEditText locality = dialog.findViewById(R.id.locality);
+        TextInputEditText city = dialog.findViewById(R.id.city);
+        TextInputEditText pinCode = dialog.findViewById(R.id.pin_code);
+        Button orderButton = dialog.findViewById(R.id.add_location);
+        ImageButton cancelButton = dialog.findViewById(R.id.cancel_button);
+
+        cancelButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            Toast.makeText(AddBookActivity.this, "Location is needed to save book", Toast.LENGTH_LONG).show();
+        });
+        orderButton.setOnClickListener(v -> {
+            Location location = new Location(AddBookActivity.this,
+                    String.valueOf(streetAddress.getText()),
+                    String.valueOf(locality.getText()),
+                    String.valueOf(city.getText()),
+                    String.valueOf(pinCode.getText())
+            );
+            book.setLocation(location);
+            saveBook(book);
+        });
+
+        dialog.show();
+    }
+
+    private Location getCurrentLoc() {
+        GPSTracker gpsTracker = new GPSTracker(this);
+        if(!gpsTracker.getIsGPSTrackingEnabled()) {
+            gpsTracker.showSettingsAlert();
+            gpsTracker.stopUsingGPS();
+        } else {
+            gpsTracker = new GPSTracker(this);
+            Location location = new Location(
+                    gpsTracker.getAddressLine(),
+                    gpsTracker.getLongitude(),
+                    gpsTracker.getLatitude()
+            );
+            location.setLocality(gpsTracker.getLocality());
+            location.setStreetAddress(gpsTracker.getStreet());
+            location.setPinCode(gpsTracker.getPostalCode());
+            location.setCity(gpsTracker.getCity());
+            return location;
+        }
+        return null;
+    }
+
+
 }

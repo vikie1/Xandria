@@ -1,12 +1,12 @@
 package com.xandria.tech.activity.book;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
@@ -25,7 +25,6 @@ import java.util.Objects;
 
 public class EditBookActivity extends AppCompatActivity {
     private TextInputEditText bookTitle, bookSubTitle, bookAuthorName, bookImageLink, bookDescription, bookPagesNo;
-    private Button deleteBookBtn;
     private DatabaseReference DbReference;
     private String bookID;
 
@@ -42,7 +41,7 @@ public class EditBookActivity extends AppCompatActivity {
         bookDescription = findViewById(R.id.editBookDescription);
         Button editBookBtn = findViewById(R.id.editBookBtn);
         Button cancelButton = findViewById(R.id.cancelEditBookBtn);
-        deleteBookBtn = findViewById(R.id.DeleteHostingBtn);
+        Button deleteBookBtn = findViewById(R.id.delete_hosting_btn);
 
         FirebaseDatabase fireDb = FirebaseDatabase.getInstance();
         BookRecyclerModel booksModel = getIntent().getParcelableExtra("book");
@@ -87,9 +86,12 @@ public class EditBookActivity extends AppCompatActivity {
 
                 }
             });
-            deleteBookBtn.setOnClickListener(view1 -> deleteBook());
         });
-
+        deleteBookBtn.setOnClickListener(view1 -> {
+            deleteBook();
+            startActivity(new Intent(EditBookActivity.this, MainActivity.class));
+            finish();
+        });
         cancelButton.setOnClickListener(view -> startActivity(new Intent(EditBookActivity.this, MainActivity.class)));
     }
     private void deleteBook(){
