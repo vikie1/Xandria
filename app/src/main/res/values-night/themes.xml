@@ -41,6 +41,7 @@
         <item name = "boxStrokeColor">@color/teal_700</item>
         <item name="boxStrokeWidth">2dp</item>
     </style>
+
     <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name ="android:background">@drawable/round_drawable</item>
     </style>

@@ -29,8 +29,8 @@ public class BookDetails{
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
-        dialog.setContentView(R.layout.activity_book_details);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setContentView(R.layout.book_details_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(R.color.black));
 
         populateBookView(book, dialog, context);
         return dialog;

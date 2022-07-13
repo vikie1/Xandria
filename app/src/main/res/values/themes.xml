@@ -33,6 +33,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+
     <style name="Theme.Xandria.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Xandria.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
