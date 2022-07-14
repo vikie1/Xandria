@@ -1,9 +1,5 @@
 package com.xandria.tech.activity.order;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.text.HtmlCompat;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,18 +8,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.text.HtmlCompat;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.xandria.tech.MainActivity;
 import com.xandria.tech.R;
 import com.xandria.tech.activity.book.BookDiscussionActivity;
 import com.xandria.tech.constants.FirebaseRefs;
+import com.xandria.tech.constants.LoggedInUser;
 import com.xandria.tech.model.OrdersModel;
 import com.xandria.tech.model.ReturnOrdersModel;
+import com.xandria.tech.model.User;
 import com.xandria.tech.util.DateUtils;
 
 import java.time.LocalDateTime;
@@ -166,6 +171,39 @@ public class OrderPlacedActivity extends AppCompatActivity {
                         Toast.makeText(OrderPlacedActivity.this, "An error occurred", Toast.LENGTH_LONG).show();
                     }
                 });
+
+                // return borrowers points
+                User user = LoggedInUser.getInstance().getCurrentUser();
+                DatabaseReference userDBRef = FirebaseDatabase
+                        .getInstance()
+                        .getReference(FirebaseRefs.USERS);
+                userDBRef.child(user.getUserId()).child("points").setValue(
+                        user.getPoints() + order.getBookValue()
+                );
+
+                // decrement hosts points
+                String hostUserId = order.getHostLocationUserId().replaceAll("[\\-+. ^:,]","_");
+                userDBRef = FirebaseDatabase
+                        .getInstance()
+                        .getReference(FirebaseRefs.USERS);
+
+                userDBRef.child(hostUserId)
+                        .child("points")
+                        .runTransaction(new Transaction.Handler() {
+                            @NonNull
+                            @Override
+                            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                                Double points = currentData.getValue(Double.class);
+                                if (points == null) currentData.setValue(0 - order.getBookValue());
+                                else currentData.setValue(points - order.getBookValue());
+                                return Transaction.success(currentData);
+                            }
+
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+
+                            }
+                        });
 
                 // now delete the order
                 DatabaseReference firebaseDatabaseRefOrders = FirebaseDatabase.getInstance().getReference(FirebaseRefs.ORDERS);
