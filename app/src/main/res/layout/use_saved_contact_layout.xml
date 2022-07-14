@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/the_following_contact_will_be_used"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/contact_string"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textStyle="italic"
+        android:text="@string/click_here_to_change"
+        android:id="@+id/contact_change"/>
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/proceed_btn"
+        android:background="@drawable/custom_button_background"
+        android:layout_margin="10dp"
+        android:text="@string/proceed"
+        android:textColor="@color/black"/>
+</LinearLayout>

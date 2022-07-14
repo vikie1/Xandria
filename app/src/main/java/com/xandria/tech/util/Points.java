@@ -1,13 +1,13 @@
 package com.xandria.tech.util;
 
 public class Points {
-    private static final int POINTS_PER_RUPEE = 10;
+    private static final double POINTS_PER_RUPEE = 10.00; // change this value if you want to change number of points for a rupee
 
-    public static Double rupeesToPoints(Double rs){
+    public static double rupeesToPoints(double rs){
         return rs * POINTS_PER_RUPEE;
     }
 
-    public static Double rupeesFromPoints(Double pts){
+    public static double rupeesFromPoints(double pts){
         return pts / POINTS_PER_RUPEE;
     }
 }

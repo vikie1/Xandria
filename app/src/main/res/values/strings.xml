@@ -80,4 +80,9 @@
     <string name="book_author">Book Author</string>
     <string name="cancel_button">Cancel Button</string>
     <string name="add_location">Add Location</string>
+    <string name="pick_up">Pick Up</string>
+    <string name="delivery">Delivery</string>
+    <string name="the_following_contact_will_be_used">The following contact will be used</string>
+    <string name="click_here_to_change"><u>Click here to change</u></string>
+    <string name="proceed">Proceed</string>
 </resources>

@@ -1,8 +1,6 @@
 package com.xandria.tech.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 import com.xandria.tech.R;
-import com.xandria.tech.activity.order.CreateOrderActivity;
+import com.xandria.tech.dialogues.CreateOrder;
 import com.xandria.tech.model.BookRecyclerModel;
 
 import java.util.ArrayList;
@@ -56,9 +54,10 @@ public class BookRecyclerAdapter extends RecyclerView.Adapter<BookRecyclerAdapte
             holder.orderButton.setVisibility(View.VISIBLE);
         }
         holder.orderButton.setOnClickListener(v -> {
-            Intent intent = new Intent(context, CreateOrderActivity.class);
-            intent.putExtra(CreateOrderActivity.EXTRA_BOOK, booksModel);
-            context.startActivity(intent);
+            new CreateOrder(context, booksModel);
+//            Intent intent = new Intent(context, CreateOrderActivity.class);
+//            intent.putExtra(CreateOrderActivity.EXTRA_BOOK, booksModel);
+//            context.startActivity(intent);
         });
         holder.itemView.setOnClickListener(view -> bookClickInterface.onBookClick(position));
     }

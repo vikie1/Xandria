@@ -22,7 +22,7 @@ public class BookRecyclerModel implements Parcelable {
     private String ISBN = null;
     private String category;
     private Location location;
-    private Double value; // the value of a book is expressed in points not rupees
+    private double value = 0.00; // the value of a book is expressed in points not rupees
 
     protected BookRecyclerModel(Parcel in) {
         bookID = in.readString();
@@ -39,7 +39,7 @@ public class BookRecyclerModel implements Parcelable {
         ISBN = in.readString();
         category = in.readString();
         location = in.readParcelable(Location.class.getClassLoader());
-//        value = in.readDouble();
+        value = in.readDouble();
     }
 
     @Override
@@ -58,7 +58,7 @@ public class BookRecyclerModel implements Parcelable {
         dest.writeString(ISBN);
         dest.writeString(category);
         dest.writeParcelable(location, flags);
-//        dest.writeDouble(value);
+        dest.writeDouble(value);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class BookRecyclerModel implements Parcelable {
         return location;
     }
 
-    public Double getValue() {
+    public double getValue() {
         return value;
     }
 
@@ -90,7 +90,7 @@ public class BookRecyclerModel implements Parcelable {
         this.location = location;
     }
 
-    public void setValue(Double value) {
+    public void setValue(double value) {
         this.value = value;
     }
 

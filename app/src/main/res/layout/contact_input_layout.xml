@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="300dp"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="@string/enter_phone_number"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <com.hbb20.CountryCodePicker
+            android:id="@+id/ccp"
+            android:layout_width="wrap_content"
+            app:ccp_contentColor="@color/white"
+            android:layout_height="wrap_content"
+            app:ccpDialog_textColor="@color/white"
+            app:ccp_hintExampleNumber="true"
+            app:ccp_autoDetectCountry="true"/>
+
+        <EditText
+            android:id="@+id/phone_number_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/contact"
+            android:inputType="phone"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:autofillHints="phone" />
+    </LinearLayout>
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/get_contact_btn"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/custom_button_background"
+        android:layout_margin="10dp"
+        android:text="@string/proceed"
+        android:textColor="@color/black"/>
+</LinearLayout>
