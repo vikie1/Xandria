@@ -85,4 +85,5 @@
     <string name="the_following_contact_will_be_used">The following contact will be used</string>
     <string name="click_here_to_change"><u>Click here to change</u></string>
     <string name="proceed">Proceed</string>
+    <string name="enter_value_of_book">Enter value of book in Rupees</string>
 </resources>

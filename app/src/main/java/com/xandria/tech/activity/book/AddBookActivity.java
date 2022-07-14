@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ import com.xandria.tech.dto.Location;
 import com.xandria.tech.model.BookRecyclerModel;
 import com.xandria.tech.util.GPSTracker;
 import com.xandria.tech.util.GoogleServices;
+import com.xandria.tech.util.Points;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -124,7 +126,7 @@ public class AddBookActivity extends AppCompatActivity {
         bookList.setOnItemClickListener((parent, view, position, id) -> {
             BookRecyclerModel googleBook = googleBooksListViewAdapter.getItem(position);
             googleBook.setUserId(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail());
-            addLocationToBook(googleBook); //
+            if (!request) addBookValue(googleBook); //
         });
     }
 
@@ -181,7 +183,7 @@ public class AddBookActivity extends AppCompatActivity {
                     bookTitleStr.replaceAll("[\\-+.^:,]","_")
             );
             booksModel.setUserId(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail());
-            addLocationToBook(booksModel);
+            if (!request) addBookValue(booksModel);
         });
     }
 
@@ -261,5 +263,40 @@ public class AddBookActivity extends AppCompatActivity {
         return null;
     }
 
+    private void addBookValue(BookRecyclerModel book){
+        Dialog dialog = new Dialog(AddBookActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.value_input_dialogue);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.black)));
 
+        ImageButton cancelButton = dialog.findViewById(R.id.cancel_button);
+        TextView positivePart = dialog.findViewById(R.id.positive_number_input);
+        TextView floatPart = dialog.findViewById(R.id.float_part_input);
+        Button saveButton = dialog.findViewById(R.id.get_value_btn);
+
+        cancelButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            Toast.makeText(AddBookActivity.this, "Book value is needed to proceed", Toast.LENGTH_LONG).show();
+        });
+        saveButton.setOnClickListener(v -> {
+            String positiveText = positivePart.getText().toString();
+            String floatText = floatPart.getText().toString();
+            if (positiveText.trim().isEmpty()) positiveText = "00";
+            if (floatText.trim().isEmpty()) floatText = "00";
+            long positive = Integer.parseInt(positiveText);
+            int floatNumber = Integer.parseInt(floatText);
+            if ((positive >= 0) || (floatNumber >= 0)){
+                if (floatNumber > 99) Toast.makeText(AddBookActivity.this, "Only use 2 decimal places", Toast.LENGTH_LONG).show();
+                else {
+                    double value = Double.parseDouble(positive + "." + floatNumber);
+                    book.setValue(Points.rupeesToPoints(value));
+                    dialog.dismiss();
+                    addLocationToBook(book);
+                }
+            } else Toast.makeText(AddBookActivity.this, "Negative digits are not allowed", Toast.LENGTH_LONG).show();
+        });
+
+        dialog.show();
+    }
 }
