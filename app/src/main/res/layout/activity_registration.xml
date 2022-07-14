@@ -88,7 +88,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/regEmailInputLayout"
-        android:layout_below="@id/regUserNameInputLayout"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
@@ -114,7 +113,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/regPhoneInputLayout"
-            android:layout_below="@id/regEmailInputLayout"
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
@@ -135,35 +133,9 @@
                 android:textColorHint="@color/white"
                 android:textSize="14sp"/>
         </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/regAddressInputLayout"
-            android:layout_below="@id/regPhoneInputLayout"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:hint="Enter your Address"
-            style="@style/TextInputLayout"
-            android:padding="5dp"
-            app:hintTextColor="@color/white"
-            android:textColorHint="@color/white" >
-            <com.google.android.material.textfield.TextInputEditText
-                android:fontFamily="@font/play"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/regAddress"
-                android:importantForAutofill="no"
-                android:autofillHints="postalAddress"
-                android:inputType="textPostalAddress"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:textSize="14sp"/>
-        </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/regAddressInputLayout"
         android:id="@+id/regPasswordInputLayout"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
@@ -187,7 +159,6 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/regPasswordInputLayout"
         android:id="@+id/regConfirmPasswordInputLayout"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
@@ -212,7 +183,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:layout_below="@id/regConfirmPasswordInputLayout"
         android:id="@+id/RegisterBtn"
         android:background="@drawable/custom_button_background"
         android:fontFamily="@font/play"
@@ -226,14 +196,12 @@
         android:text="Already Registered? Login Here"
         android:textSize="14sp"
         android:textColor="@color/white"
-        android:layout_below="@id/RegisterBtn"
         android:id="@+id/LoginTextBtn"
         android:layout_marginTop="15dp"
         android:textAlignment="center"/>
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:id="@+id/loadingPB"
         android:indeterminate="true"
         android:indeterminateDrawable="@drawable/progressbar"

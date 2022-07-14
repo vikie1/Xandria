@@ -39,6 +39,7 @@
     <string name="account">Account</string>
     <string name="profile">Profile</string>
     <string name="name"><![CDATA[<b>Name:</b>]]></string>
+    <string name="points"><![CDATA[<b>Points:</b>]]></string>
     <string name="email"><![CDATA[<b>Email:</b>]]></string>
     <string name="phone"><![CDATA[<b>Phone:</b>]]></string>
     <string name="address"><![CDATA[<b>Address:</b>]]></string>
@@ -86,4 +87,7 @@
     <string name="click_here_to_change"><u>Click here to change</u></string>
     <string name="proceed">Proceed</string>
     <string name="enter_value_of_book">Enter value of book in Rupees</string>
+    <string name="account_profile">Account Profile</string>
+    <string name="buy_points">Buy Points</string>
+    <string name="specify_the_amount_in_rupees">Specify the amount in Rupees</string>
 </resources>

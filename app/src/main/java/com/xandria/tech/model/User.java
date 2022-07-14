@@ -1,18 +1,11 @@
 package com.xandria.tech.model;
 
-import android.content.Context;
-import android.widget.Toast;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.xandria.tech.dto.Location;
-import com.xandria.tech.util.GoogleServices;
-
 public class User {
     private String name;
     private String userId;
     private String email;
     private String phoneNumber;
-    private Location location;
+    private double points;
 
     // constructors
     public User(){}
@@ -28,8 +21,8 @@ public class User {
         return userId;
     }
 
-    public Location getLocation() {
-        return location;
+    public double getPoints() {
+        return points;
     }
 
     public String getEmail() {
@@ -49,18 +42,8 @@ public class User {
         this.userId = userId;
     }
 
-    public void setLocation( Context context, String address) {
-        LatLng latLng = GoogleServices.getLocationFromAddress(context, address);
-        if (latLng != null)
-            this.location = new Location(address, latLng.longitude, latLng.latitude);
-        else {
-            this.location = new Location(address, null, null);
-            Toast.makeText(context, "The latitude and longitude not found from address", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setPoints(double points) {
+        this.points = points;
     }
 
     public void setEmail(String email) {

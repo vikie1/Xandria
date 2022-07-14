@@ -19,7 +19,6 @@ import com.xandria.tech.MainActivity;
 import com.xandria.tech.R;
 import com.xandria.tech.activity.book.BookDiscussionActivity;
 import com.xandria.tech.activity.book.EditBookActivity;
-import com.xandria.tech.activity.order.CreateOrderActivity;
 import com.xandria.tech.model.BookRecyclerModel;
 
 import java.util.Objects;
@@ -121,11 +120,7 @@ public class BookDetails{
             context.startActivity(i);
         });
 
-        orderButton.setOnClickListener(v -> {
-            Intent intent = new Intent(context, CreateOrderActivity.class);
-            intent.putExtra(CreateOrderActivity.EXTRA_BOOK, book);
-            context.startActivity(intent);
-        });
+        orderButton.setOnClickListener(v -> new CreateOrder(context, book));
 
         backToMain.setOnClickListener(view -> {
             context.startActivity(new Intent(context, MainActivity.class));

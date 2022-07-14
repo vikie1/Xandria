@@ -4,14 +4,13 @@ import android.content.Context;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.xandria.tech.model.User;
 
 import java.util.Objects;
@@ -20,6 +19,7 @@ public class LoggedInUser {
     private static LoggedInUser loggedInUser;
     private User currentUser;
     private Context context;
+    private DatabaseReference userDatabaseReference;
 
     public static LoggedInUser getInstance(Context... context){
         if (loggedInUser == null) loggedInUser = new LoggedInUser();
@@ -58,33 +58,11 @@ public class LoggedInUser {
     private LoggedInUser(){ }
 
     private void getUser(DatabaseReference firebaseDatabaseReference, String userId) {
-        firebaseDatabaseReference.addChildEventListener(new ChildEventListener() {
+        userDatabaseReference = firebaseDatabaseReference.child(userId);
+        userDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                if (snapshot.getKey().equals(userId)) {
-                    setCurrentUser(Objects.requireNonNull(snapshot.getValue(User.class)));
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                if (snapshot.getKey().equals(userId)) {
-                    setCurrentUser(Objects.requireNonNull(snapshot.getValue(User.class)));
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                if (snapshot.getKey().equals(userId)) {
-                    setCurrentUser(Objects.requireNonNull(snapshot.getValue(User.class)));
-                }
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                if (snapshot.getKey().equals(userId)) {
-                    setCurrentUser(Objects.requireNonNull(snapshot.getValue(User.class)));
-                }
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                setCurrentUser(snapshot.getValue(User.class));
             }
 
             @Override
@@ -92,5 +70,13 @@ public class LoggedInUser {
                 Toast.makeText(context, "An error occurred while retrieving the details", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void setFirebaseDatabaseReference(DatabaseReference firebaseDatabaseReference) {
+        this.userDatabaseReference = firebaseDatabaseReference;
+    }
+
+    public DatabaseReference getFirebaseDatabaseReference() {
+        return userDatabaseReference;
     }
 }

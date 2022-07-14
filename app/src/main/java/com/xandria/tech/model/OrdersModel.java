@@ -7,13 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.xandria.tech.dto.Location;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.Calendar;
-import java.util.Locale;
 
 public class OrdersModel implements Parcelable {
     private String orderId;
@@ -27,6 +21,7 @@ public class OrdersModel implements Parcelable {
     private String buyerUserId;
     private String dateOrdered;
     private String deliveryContact;
+    private double bookValue = 0.00;
     private boolean isBorrowConfirmed;
     private boolean isReturned;
 
@@ -59,6 +54,7 @@ public class OrdersModel implements Parcelable {
         deliveryContact = in.readString();
         isBorrowConfirmed = in.readByte() != 0;
         isReturned = in.readByte() != 0;
+        bookValue = in.readDouble();
     }
 
     @Override
@@ -76,6 +72,7 @@ public class OrdersModel implements Parcelable {
         dest.writeString(deliveryContact);
         dest.writeByte((byte) (isBorrowConfirmed ? 1 : 0));
         dest.writeByte((byte) (isReturned ? 1 : 0));
+        dest.writeDouble(bookValue);
     }
 
     @Override
@@ -102,6 +99,14 @@ public class OrdersModel implements Parcelable {
 
     public String getDeliveryContact() {
         return deliveryContact;
+    }
+
+    public double getBookValue() {
+        return bookValue;
+    }
+
+    public void setBookValue(double bookValue) {
+        this.bookValue = bookValue;
     }
 
     public void setDeliveryContact(String deliveryContact) {

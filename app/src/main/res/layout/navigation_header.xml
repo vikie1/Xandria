@@ -37,12 +37,12 @@
             android:layout_height="wrap_content"
             android:text="@string/welcome"
             android:textColor="@color/white"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:id="@+id/nav_display_email"-->
-<!--            android:text="welcome"/>-->
+            android:id="@+id/nav_display_name"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:id="@+id/nav_display_points"
+            android:text="Points: "/>
     </LinearLayout>
 </FrameLayout>

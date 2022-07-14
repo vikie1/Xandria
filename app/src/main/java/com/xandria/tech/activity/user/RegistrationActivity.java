@@ -26,7 +26,7 @@ import java.util.Objects;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    private TextInputEditText username, email, password, confirmPwd, phone, address;
+    private TextInputEditText username, email, password, confirmPwd, phone;
     private ProgressBar PB;
     private FirebaseAuth mAuth;
 
@@ -39,7 +39,6 @@ public class RegistrationActivity extends AppCompatActivity {
         username = findViewById(R.id.regUserName);
         email = findViewById(R.id.regEmail);
         phone = findViewById(R.id.regPhone);
-        address = findViewById(R.id.regAddress);
         password = findViewById(R.id.regPassword);
         confirmPwd = findViewById(R.id.regConfirmPassword);
         Button registerBtn = findViewById(R.id.RegisterBtn);
@@ -88,7 +87,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 email,
                 Objects.requireNonNull(phone.getText()).toString()
         );
-        user.setLocation(this, Objects.requireNonNull(address.getText()).toString());
 
         DatabaseReference userDBRef = FirebaseDatabase.getInstance().getReference(FirebaseRefs.USERS);
         userDBRef.child(user.getUserId()).setValue(user);

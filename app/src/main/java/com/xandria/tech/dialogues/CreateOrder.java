@@ -11,10 +11,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.hbb20.CountryCodePicker;
 import com.xandria.tech.R;
 import com.xandria.tech.constants.FirebaseRefs;
@@ -157,12 +164,6 @@ public class CreateOrder {
     }
 
     private void createOrder(Location dropLocation, Dialog dialog) {
-//        EditText phoneNumber = findViewById(R.id.phone_number_input);
-//        String contact = phoneNumber.getText().toString();
-//        if (contact.equals("")) {
-//            Toast.makeText(context, "Phone number must be present", Toast.LENGTH_LONG).show();
-//            return;
-//        }
         OrdersModel newOrder = new OrdersModel(
                 userId, // let user be the orders id
                 book.getBookID(),
@@ -173,13 +174,48 @@ public class CreateOrder {
                 book.getTitle(),
                 book.getThumbnail()
         );
-//        if (selectedCountryCode == null || selectedCountryCode.equals(""))
-//            selectedCountryCode = ccp.getSelectedCountryCodeWithPlus();
-        newOrder.setDeliveryContact(contact);
-        newOrder.setDateOrdered();
-        newOrder.setDropLocation(dropLocation);
-        firebaseDatabaseRef.child(newOrder.getOrderId()).child(newOrder.getBookId()).setValue(newOrder);
-        Toast.makeText(context, "Order Created", Toast.LENGTH_LONG).show();
+        if (
+                LoggedInUser.getInstance().getCurrentUser().getPoints() >= book.getValue()
+        ){
+            // decrease borrowers points
+            User user = LoggedInUser.getInstance().getCurrentUser();
+            DatabaseReference userDBRef = FirebaseDatabase
+                    .getInstance()
+                    .getReference(FirebaseRefs.USERS);
+            userDBRef.child(user.getUserId()).child("points").setValue(
+                    user.getPoints() - book.getValue()
+            );
+
+            // increase book host user points
+            String hostUserId = book.getUserId().replaceAll("[\\-+. ^:,]","_");
+            userDBRef = FirebaseDatabase
+                    .getInstance()
+                    .getReference(FirebaseRefs.USERS);
+
+            userDBRef.child(hostUserId)
+                    .child("points")
+                    .runTransaction(new Transaction.Handler() {
+                @NonNull
+                @Override
+                public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                    Double points = currentData.getValue(Double.class);
+                    if (points == null) currentData.setValue(book.getValue());
+                    else currentData.setValue(points + book.getValue());
+                    return Transaction.success(currentData);
+                }
+
+                @Override
+                public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+
+                }
+            });
+            newOrder.setBookValue(book.getValue());
+            newOrder.setDeliveryContact(contact);
+            newOrder.setDateOrdered();
+            newOrder.setDropLocation(dropLocation);
+            firebaseDatabaseRef.child(newOrder.getOrderId()).child(newOrder.getBookId()).setValue(newOrder);
+            Toast.makeText(context, "Order Created", Toast.LENGTH_LONG).show();
+        } else Toast.makeText(context, "You need more than " + book.getValue() + " points to complete this order", Toast.LENGTH_LONG).show();
         dialog.onBackPressed();
     }
 }
