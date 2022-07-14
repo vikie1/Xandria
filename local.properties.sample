@@ -1,0 +1,12 @@
+## This file must *NOT* be checked into Version Control Systems,
+# as it contains information specific to your local configuration.
+#
+# Location of the SDK. This is only used by Gradle.
+# For customization when using a Version Control System, please read the
+# header note.
+#Mon Jun 27 11:18:40 EAT 2022
+sdk.dir=/home/vikie/Android/Sdk
+MAPS_API_KEY=random_string
+RAZOR_PAY_KEY_ID=random_string
+RAZOR_PAY_KEY_SECRET=random_string
+BUSINESS_NAME=not_really_random_use_razorpay_business_name
