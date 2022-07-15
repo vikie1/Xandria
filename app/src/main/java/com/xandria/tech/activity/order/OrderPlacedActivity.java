@@ -83,7 +83,7 @@ public class OrderPlacedActivity extends AppCompatActivity {
                     HtmlCompat.FROM_HTML_MODE_COMPACT
             ));
         }
-        if (!isMyBook && order.isBorrowConfirmed()) {
+        if (!isMyBook && order.isBorrowConfirmed() && !order.isReturned()) {
             confirmReception.setVisibility(View.GONE); // if reception is confirmed no deed to show button
             status.setText(HtmlCompat.fromHtml(
                     getString(R.string.order_status).concat(" ").concat("Completed"),

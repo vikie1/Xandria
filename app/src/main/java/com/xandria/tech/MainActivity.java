@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onPaymentError(int i, String s) {
         Toast.makeText(MainActivity.this, "An error occurred", Toast.LENGTH_LONG).show();
 
+        System.out.println(i + " " + s);
         FragmentManager fm =  getSupportFragmentManager();
         ProfileFragment profileFragment = (ProfileFragment) fm.findFragmentById(R.id.content_frame);
         if (profileFragment != null) profileFragment.handlePaymentComplete(false);

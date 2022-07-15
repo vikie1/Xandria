@@ -14,7 +14,7 @@
     <string name="go_back_to_main">Go Back To Main</string>
     <string name="nav_open_drawer">Open Drawer</string>
     <string name="nav_close_drawer">Close Drawer</string>
-    <string name="book_orders">My Borrows</string>
+    <string name="book_orders">Orders</string>
     <string name="add_book_fab">Add Book Fab</string>
     <string name="new_order_fab">Create New Order Fab</string>
     <string name="home">Home</string>
@@ -90,4 +90,8 @@
     <string name="account_profile">Account Profile</string>
     <string name="buy_points">Buy Points</string>
     <string name="specify_the_amount_in_rupees">Specify the amount in Rupees</string>
+    <string name="pending">Pending</string>
+    <string name="done">Done</string>
+    <string name="returning">Returning</string>
+    <string name="all">All</string>
 </resources>

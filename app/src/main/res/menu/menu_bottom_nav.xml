@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/nav_all"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_home_24"
+        android:title="@string/all"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/nav_completed"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_download_done_24"
+        android:title="@string/done"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/nav_pending"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_pending_24"
+        android:title="@string/pending"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/nav_awaiting_return"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_flight_takeoff_24"
+        android:title="@string/returning"
+        app:showAsAction="ifRoom" />
+</menu>

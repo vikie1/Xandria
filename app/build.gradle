@@ -32,6 +32,9 @@ android {
         }
         release {
             minifyEnabled false
+            buildConfigField('String', "RAZOR_PAY_API_KEY", "\"" + razorPayApiKey + "\"")
+            buildConfigField('String', "RAZOR_PAY_API_KEY_ID", "\"" + razorPayApiKeyId + "\"")
+            buildConfigField('String', "RAZOR_PAY_BUSINESS_NAME", "\"" + businessName + "\"")
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

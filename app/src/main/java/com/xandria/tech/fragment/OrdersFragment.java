@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -66,12 +67,14 @@ public class OrdersFragment extends Fragment {
             startActivity(intent);
         });
 
-        getOrdersFromDb();
+        getOrdersFromDb("all");
+        setupBottomNav();
         return view;
     }
 
-    void getOrdersFromDb(){
+    void getOrdersFromDb(String filter){
         ordersList.clear();
+        listViewAdapter.clear();
 
         firebaseDatabaseReference.addChildEventListener(new ChildEventListener() {
             @Override
@@ -80,30 +83,60 @@ public class OrdersFragment extends Fragment {
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
                     if (dataSnapshot.exists() && snapshot.getKey().equals(userId)) {
                         ordersModel = dataSnapshot.getValue(OrdersModel.class);
-                        listViewAdapter.add(ordersModel);
+
+                        if (ordersModel != null) {
+                            if (filter.equals("all")) listViewAdapter.add(ordersModel);
+                            else if (filter.equals("pending") && !ordersModel.isBorrowConfirmed())
+                                listViewAdapter.add(ordersModel);
+                            else if (filter.equals("completed") && ordersModel.isBorrowConfirmed()&& !ordersModel.isReturned())
+                                listViewAdapter.add(ordersModel);
+                            else if (filter.equals("returning") && ordersModel.isReturned())
+                                listViewAdapter.add(ordersModel);
+                        }
                     }
                 }
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                listViewAdapter.notifyDataSetChanged();
+//                listViewAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                listViewAdapter.notifyDataSetChanged();
+//                listViewAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                listViewAdapter.notifyDataSetChanged();
+//                listViewAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
+        });
+    }
+
+    void setupBottomNav(){
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) view.findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()){
+                case R.id.nav_completed:
+                    getOrdersFromDb("completed");
+                    break;
+                case R.id.nav_pending:
+                    getOrdersFromDb("pending");
+                    break;
+                case R.id.nav_awaiting_return:
+                    getOrdersFromDb("returning");
+                    break;
+                default:
+                    getOrdersFromDb("all");
+                    break;
+            }
+            return true;
         });
     }
 

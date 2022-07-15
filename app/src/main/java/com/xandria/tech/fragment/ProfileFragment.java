@@ -40,7 +40,6 @@ import com.xandria.tech.util.Points;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -85,7 +84,7 @@ public class ProfileFragment extends Fragment {
 
         buyPoints.setOnClickListener(v -> {
             Checkout checkout = new Checkout();
-            checkout.setKeyID(BuildConfig.RAZOR_PAY_KEY_SECRET);
+            checkout.setKeyID(BuildConfig.RAZOR_PAY_API_KEY_ID);
             checkout.setImage(R.drawable.xandria);
             Dialog dialog = new Dialog(context);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -120,16 +119,13 @@ public class ProfileFragment extends Fragment {
                                 .format(Locale.getDefault(), "%.2f", value)
                                 .replace(".", "")
                                 .replace(",", ""); // get currency in subunits
-
+                        int moneyInPaise = Integer.parseInt(amountToBePaid);
+                        System.out.println("Amount:" + moneyInPaise);
                         try {
                             JSONObject options = new JSONObject();
                             options.put("name", BuildConfig.BUSINESS_NAME);
-                            options.put(
-                                    "order_id",
-                                    Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail() + LocalDateTime.now().toString()
-                            );//Order id is the user email and current time and date
                             options.put("currency", "INR");
-                            options.put("amount", amountToBePaid);//pass amount in currency subunits
+                            options.put("amount", moneyInPaise);//pass amount in currency subunits
                             options.put("description", "Purchase of Xandria Tokens");
                             options.put("prefill.email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
                             options.put("prefill.contact", LoggedInUser.getInstance().getCurrentUser().getPhoneNumber());
@@ -168,7 +164,10 @@ public class ProfileFragment extends Fragment {
                         if (floatNumber > 99) Toast.makeText(context, "Only use 2 decimal places", Toast.LENGTH_LONG).show();
                         else {
                             double value = Double.parseDouble(positive + "." + floatNumber);
-                            amount.setText(String.valueOf(Points.rupeesToPoints(value)));
+                            amount.setText(HtmlCompat.fromHtml(
+                                    context.getString(R.string.points).concat(" ").concat(String.valueOf(Points.rupeesToPoints(value))),
+                                    HtmlCompat.FROM_HTML_MODE_COMPACT
+                            ));
                         }
                     } else Toast.makeText(context, "Negative digits are not allowed", Toast.LENGTH_LONG).show();
                 }
@@ -242,7 +241,7 @@ public class ProfileFragment extends Fragment {
     }
 
     public void handlePaymentComplete(boolean success){
-        System.out.println("Points: " + points);
+        System.out.println("Yup Points: " + points);
         if (!success) return;
         // award the points on successful payment
         User user = LoggedInUser.getInstance().getCurrentUser();
