@@ -95,4 +95,13 @@
     <string name="returning">Returning</string>
     <string name="all">All</string>
     <string name="get_your_order">How to you want to get your order?</string>
+    <string name="password">Password</string>
+    <string name="confirm">Confirm</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="enter_your_email">Enter your Email</string>
+    <string name="password_reset_email_instructions">You will receive password reset instructions in the email</string>
+    <string name="reset_text">Forgot password? Reset Here</string>
+    <string name="reg_text">New User? Register Here</string>
+    <string name="login">Login</string>
+    <string name="enter_your_password">Enter your Password</string>
 </resources>

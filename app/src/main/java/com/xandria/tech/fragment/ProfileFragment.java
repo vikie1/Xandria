@@ -3,6 +3,7 @@ package com.xandria.tech.fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -22,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -68,15 +70,48 @@ public class ProfileFragment extends Fragment {
                 .replaceAll("[\\-+. ^:,]","_");
 
         Button logoutBtn = view.findViewById(R.id.logout_btn);
+        Button resetPassword = view.findViewById(R.id.reset_password);
+
         logoutBtn.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(context, LoginActivity.class));
         });
+        resetPassword.setOnClickListener(v -> setUpPasswordReset());
 
         setUpBuyPointsButton(view);
         getUser();
 
         return  view;
+    }
+
+    private void setUpPasswordReset() {
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.password_update);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        Button passwordResetButton = dialog.findViewById(R.id.password_reset_btn);
+        TextInputEditText passwordText = dialog.findViewById(R.id.password_input);
+        TextInputEditText confirmPasswordText = dialog.findViewById(R.id.password_conf_input);
+        passwordResetButton.setOnClickListener(v -> {
+            String newPassword = passwordText.getText() == null ? "" : passwordText.getText().toString() ;
+            String confPassword = confirmPasswordText.getText() == null ? "" : confirmPasswordText.getText().toString();
+
+            if (newPassword.isEmpty() && confPassword.isEmpty()) {
+                Toast.makeText(context,"Enter a valid password", Toast.LENGTH_LONG).show();
+            }
+            else if (newPassword.equals(confPassword)) {
+                Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).updatePassword(newPassword);
+                Toast.makeText(context, "Password updated successfully", Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+            else {
+                Toast.makeText(context, "Passwords should match", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        dialog.show();
     }
 
     private void setUpBuyPointsButton(View view) {

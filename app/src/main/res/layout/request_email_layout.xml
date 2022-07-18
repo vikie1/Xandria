@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@drawable/custom_border"
+    android:backgroundTint="@color/black"
+    android:backgroundTintMode="screen">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/loginEmailInputLayout"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:hint="@string/enter_your_email"
+        style="@style/TextInputLayout"
+        android:autofillHints="emailAddress"
+        android:padding="5dp"
+        app:hintTextColor="@color/white"
+        android:textColorHint="@color/white" >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:fontFamily="@font/play"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/password_rst_email"
+            android:autofillHints="emailAddress"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="14sp"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/password_reset_email_instructions"/>
+
+    <Button
+        android:id="@+id/password_reset_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginHorizontal="10dp"
+        android:background="@drawable/custom_button_background"
+        android:text="@string/confirm"
+        android:textColor="@color/black" />
+</LinearLayout>
