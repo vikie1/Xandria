@@ -9,12 +9,24 @@
     app:cardCornerRadius="3dp"
     app:cardElevation="3dp">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
         <ImageView
             android:id="@+id/BookImageView"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
             android:contentDescription="@string/book_image" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:background="@color/darker"
+            android:id="@+id/book_value"/>
+    </FrameLayout>
 
         <TextView
             android:layout_width="match_parent"

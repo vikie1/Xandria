@@ -44,7 +44,8 @@ public class BookRecyclerAdapter extends RecyclerView.Adapter<BookRecyclerAdapte
     public void onBindViewHolder(@NonNull BookRecyclerAdapter.ViewHolder holder, int position) {
         BookRecyclerModel booksModel = BookRecyclerModelArrayList.get(position);
         holder.bookTitle.setText(booksModel.getTitle());
-        holder.bookAuthor.setText(booksModel.getAuthors());
+        holder.bookAuthor.setText((booksModel.getAuthors() != null) ? booksModel.getAuthors() : "");
+        holder.bookValue.setText(String.format("%s Points", booksModel.getValue()));
         Picasso.get().load(booksModel.getThumbnail()).into(holder.bookImage);
         if (Objects.equals(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail(),
                 booksModel.getUserId())) { // you shouldn't order what you already own
@@ -53,12 +54,7 @@ public class BookRecyclerAdapter extends RecyclerView.Adapter<BookRecyclerAdapte
         else {
             holder.orderButton.setVisibility(View.VISIBLE);
         }
-        holder.orderButton.setOnClickListener(v -> {
-            new CreateOrder(context, booksModel);
-//            Intent intent = new Intent(context, CreateOrderActivity.class);
-//            intent.putExtra(CreateOrderActivity.EXTRA_BOOK, booksModel);
-//            context.startActivity(intent);
-        });
+        holder.orderButton.setOnClickListener(v -> new CreateOrder(context, booksModel));
         holder.itemView.setOnClickListener(view -> bookClickInterface.onBookClick(position));
     }
 
@@ -70,6 +66,7 @@ public class BookRecyclerAdapter extends RecyclerView.Adapter<BookRecyclerAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder{
         private final TextView bookTitle;
         private final TextView bookAuthor;
+        private final TextView bookValue;
         ImageView bookImage;
         Button orderButton;
 
@@ -79,6 +76,7 @@ public class BookRecyclerAdapter extends RecyclerView.Adapter<BookRecyclerAdapte
             bookAuthor = itemView.findViewById(R.id.BookAuthorNameTextView);
             bookImage = itemView.findViewById(R.id.BookImageView);
             orderButton = itemView.findViewById(R.id.order_button);
+            bookValue = itemView.findViewById(R.id.book_value);
         }
     }
     public interface BookClickInterface {
