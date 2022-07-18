@@ -65,39 +65,45 @@ public class MainActivity extends AppCompatActivity implements
     void setUpNavigationDrawer(Toolbar toolbar){
         //setting up the navigation drawer
         DrawerLayout drawerLayout = findViewById(R.id.main);
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        headerView = navigationView.getHeaderView(0);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
                 drawerLayout,
                 toolbar,
                 R.string.nav_open_drawer,
                 R.string.nav_close_drawer
-        );
+        ){
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+
+                // setup user name and points when drawer is opened
+                TextView nameView = headerView.findViewById(R.id.nav_display_name);
+                TextView pointsView = headerView.findViewById(R.id.nav_display_points);
+
+                if (LoggedInUser.getInstance().getCurrentUser() != null){
+                    nameView.setText(HtmlCompat.fromHtml(
+                            getString(R.string.name).concat(" ").concat(LoggedInUser.getInstance().getCurrentUser().getName()),
+                            HtmlCompat.FROM_HTML_MODE_COMPACT
+                    ));
+                    pointsView.setText(HtmlCompat.fromHtml(
+                            getString(R.string.points).concat(" ").concat(
+                                    String.valueOf(LoggedInUser.getInstance().getCurrentUser().getPoints())
+                            ),
+                            HtmlCompat.FROM_HTML_MODE_COMPACT
+                    ));
+                } else {
+                    nameView.setVisibility(View.GONE);
+                    pointsView.setVisibility(View.GONE);
+                }
+            }
+        };
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
         //make the drawer respond to clicks
-        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        headerView = navigationView.getHeaderView(0);
-
-        // Populate user's name and points balance
-        TextView nameView = headerView.findViewById(R.id.nav_display_name);
-        TextView pointsView = headerView.findViewById(R.id.nav_display_points);
-
-        if (LoggedInUser.getInstance().getCurrentUser() != null){
-            nameView.setText(HtmlCompat.fromHtml(
-                    getString(R.string.name).concat(" ").concat(LoggedInUser.getInstance().getCurrentUser().getName()),
-                    HtmlCompat.FROM_HTML_MODE_COMPACT
-            ));
-            pointsView.setText(HtmlCompat.fromHtml(
-                    getString(R.string.points).concat(" ").concat(
-                            String.valueOf(LoggedInUser.getInstance().getCurrentUser().getPoints())
-                    ),
-                    HtmlCompat.FROM_HTML_MODE_COMPACT
-            ));
-        } else {
-            nameView.setVisibility(View.GONE);
-            pointsView.setVisibility(View.GONE);
-        }
     }
 
     @Override
