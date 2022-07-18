@@ -2,7 +2,9 @@ package com.xandria.tech.dialogues;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,16 +51,10 @@ public class CreateOrder {
                 .replaceAll("[\\-+. ^:,]","_");
         this.firebaseDatabaseRef = FirebaseDatabase.getInstance().getReference(FirebaseRefs.ORDERS);
 
-        addContact();
+        addLocationToBook();
     }
 
-    private void addContact() {
-        Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.contact_dialogue_layout);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.black)));
-
+    private void addContact(Dialog dialog) {
         ViewSwitcher viewSwitcher = dialog.findViewById(R.id.saved_new_contact_switcher);
         if (LoggedInUser.getInstance().getCurrentUser().getPhoneNumber() != null &&
                         !LoggedInUser.getInstance().getCurrentUser().getPhoneNumber().trim().isEmpty()){
@@ -66,15 +62,8 @@ public class CreateOrder {
             ((TextView)dialog.findViewById(R.id.contact_string)).setText(LoggedInUser.getInstance().getCurrentUser().getPhoneNumber());
         } else viewSwitcher.setDisplayedChild(1);
 
-        Button useSaved = dialog.findViewById(R.id.proceed_btn);
         Button getContact = dialog.findViewById(R.id.get_contact_btn);
         TextView switcherTextView = dialog.findViewById(R.id.contact_change);
-
-        useSaved.setOnClickListener(v -> {
-            contact = LoggedInUser.getInstance().getCurrentUser().getPhoneNumber();
-            dialog.dismiss();
-            addLocationToBook();
-        });
 
         getContact.setOnClickListener(v -> {
             EditText phoneNumber = dialog.findViewById(R.id.phone_number_input);
@@ -100,12 +89,14 @@ public class CreateOrder {
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
-        dialog.setContentView(R.layout.location_input_mode);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.black)));
+        dialog.setContentView(R.layout.create_order_dialogue_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         ((Button)dialog.findViewById(R.id.use_current)).setText(context.getResources().getString(R.string.pick_up));
         ((Button)dialog.findViewById(R.id.use_preferred)).setText(context.getResources().getString(R.string.delivery));
+        ((Button)dialog.findViewById(R.id.proceed_btn)).setVisibility(View.GONE);
 
+        addContact(dialog);
         handleChoiceDialogueButtonClicks(dialog);
         dialog.show();
     }
@@ -120,6 +111,14 @@ public class CreateOrder {
             Toast.makeText(context, "Location is needed to save order", Toast.LENGTH_LONG).show();
         });
         useCurrent.setOnClickListener(v -> {
+            if (contact == null) {
+                if (LoggedInUser.getInstance().getCurrentUser().getPhoneNumber() != null)
+                    contact = LoggedInUser.getInstance().getCurrentUser().getPhoneNumber();
+                else {
+                    Toast.makeText(context, "Contact is needed to proceed", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
             Location location = book.getLocation();
             if (location != null) {
                 createOrder(location, dialog);
@@ -127,6 +126,14 @@ public class CreateOrder {
             else Toast.makeText(context, "Location is permissions are needed to proceed", Toast.LENGTH_LONG).show();
         });
         useNew.setOnClickListener(v ->{
+            if (contact == null) {
+                if (LoggedInUser.getInstance().getCurrentUser().getPhoneNumber() != null)
+                    contact = LoggedInUser.getInstance().getCurrentUser().getPhoneNumber();
+                else {
+                    Toast.makeText(context, "Contact is needed to proceed", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
             dialog.dismiss();
             switchToManualLocationEntry();
         });
