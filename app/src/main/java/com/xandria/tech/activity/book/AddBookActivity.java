@@ -202,7 +202,7 @@ public class AddBookActivity extends AppCompatActivity {
                 book.setLocation(location);
                 saveBook(book);
             }
-            else Toast.makeText(AddBookActivity.this, "Location is permissions are needed to proceed", Toast.LENGTH_LONG).show();
+            else Toast.makeText(AddBookActivity.this, "Location permissions are needed to proceed", Toast.LENGTH_LONG).show();
         });
         useNew.setOnClickListener(v ->{
             dialog.dismiss();

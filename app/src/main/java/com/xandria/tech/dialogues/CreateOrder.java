@@ -9,6 +9,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
@@ -32,6 +33,7 @@ import com.xandria.tech.dto.Location;
 import com.xandria.tech.model.BookRecyclerModel;
 import com.xandria.tech.model.OrdersModel;
 import com.xandria.tech.model.User;
+import com.xandria.tech.util.GPSTracker;
 
 import java.util.Objects;
 
@@ -62,25 +64,9 @@ public class CreateOrder {
             ((TextView)dialog.findViewById(R.id.contact_string)).setText(LoggedInUser.getInstance().getCurrentUser().getPhoneNumber());
         } else viewSwitcher.setDisplayedChild(1);
 
-        Button getContact = dialog.findViewById(R.id.get_contact_btn);
+        ((Button)dialog.findViewById(R.id.get_contact_btn)).setVisibility(View.GONE);
         TextView switcherTextView = dialog.findViewById(R.id.contact_change);
 
-        getContact.setOnClickListener(v -> {
-            EditText phoneNumber = dialog.findViewById(R.id.phone_number_input);
-            CountryCodePicker ccp = dialog.findViewById(R.id.ccp);
-
-            String contactWithNoCode = phoneNumber.getText().toString();
-            if (!contactWithNoCode.trim().isEmpty()){
-                contact = ccp.getSelectedCountryCodeWithPlus() + contactWithNoCode;
-                User user = LoggedInUser.getInstance().getCurrentUser();
-                DatabaseReference userDBRef = FirebaseDatabase
-                        .getInstance()
-                        .getReference(FirebaseRefs.USERS);
-                userDBRef.child(user.getUserId()).child("phoneNumber").setValue(contact);
-                dialog.dismiss();
-                addLocationToBook();
-            } else Toast.makeText(context, "Phone number is needed to proceed", Toast.LENGTH_LONG).show();
-        });
         switcherTextView.setOnClickListener(v -> viewSwitcher.setDisplayedChild(1));
         dialog.show();
     }
@@ -111,6 +97,18 @@ public class CreateOrder {
             Toast.makeText(context, "Location is needed to save order", Toast.LENGTH_LONG).show();
         });
         useCurrent.setOnClickListener(v -> {
+            EditText phoneNumber = dialog.findViewById(R.id.phone_number_input);
+            CountryCodePicker ccp = dialog.findViewById(R.id.ccp);
+
+            String contactWithNoCode = phoneNumber.getText().toString();
+            if (!contactWithNoCode.trim().isEmpty() && !contactWithNoCode.trim().isEmpty()) {
+                contact = ccp.getSelectedCountryCodeWithPlus() + contactWithNoCode;
+                User user = LoggedInUser.getInstance().getCurrentUser();
+                DatabaseReference userDBRef = FirebaseDatabase
+                        .getInstance()
+                        .getReference(FirebaseRefs.USERS);
+                userDBRef.child(user.getUserId()).child("phoneNumber").setValue(contact);
+            }
             if (contact == null) {
                 if (LoggedInUser.getInstance().getCurrentUser().getPhoneNumber() != null)
                     contact = LoggedInUser.getInstance().getCurrentUser().getPhoneNumber();
@@ -126,6 +124,18 @@ public class CreateOrder {
             else Toast.makeText(context, "Location is permissions are needed to proceed", Toast.LENGTH_LONG).show();
         });
         useNew.setOnClickListener(v ->{
+            EditText phoneNumber = dialog.findViewById(R.id.phone_number_input);
+            CountryCodePicker ccp = dialog.findViewById(R.id.ccp);
+
+            String contactWithNoCode = phoneNumber.getText().toString();
+            if (!contactWithNoCode.trim().isEmpty() && !contactWithNoCode.trim().isEmpty()) {
+                contact = ccp.getSelectedCountryCodeWithPlus() + contactWithNoCode;
+                User user = LoggedInUser.getInstance().getCurrentUser();
+                DatabaseReference userDBRef = FirebaseDatabase
+                        .getInstance()
+                        .getReference(FirebaseRefs.USERS);
+                userDBRef.child(user.getUserId()).child("phoneNumber").setValue(contact);
+            }
             if (contact == null) {
                 if (LoggedInUser.getInstance().getCurrentUser().getPhoneNumber() != null)
                     contact = LoggedInUser.getInstance().getCurrentUser().getPhoneNumber();
@@ -146,11 +156,13 @@ public class CreateOrder {
         dialog.setContentView(R.layout.location_input);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.black)));
 
+        ((LinearLayout) dialog.findViewById(R.id.use_current_layout)).setVisibility(View.VISIBLE);
         TextInputEditText streetAddress = dialog.findViewById(R.id.street_address);
         TextInputEditText locality = dialog.findViewById(R.id.locality);
         TextInputEditText city = dialog.findViewById(R.id.city);
         TextInputEditText pinCode = dialog.findViewById(R.id.pin_code);
         Button orderButton = dialog.findViewById(R.id.add_location);
+        Button useCurrent = dialog.findViewById(R.id.use_current);
         ImageButton cancelButton = dialog.findViewById(R.id.cancel_button);
 
         cancelButton.setOnClickListener(v -> {
@@ -165,6 +177,13 @@ public class CreateOrder {
                     String.valueOf(pinCode.getText())
             );
             createOrder(location, dialog);
+        });
+        useCurrent.setOnClickListener(v -> {
+            Location location = getCurrentLoc();
+            if (location != null) {
+                createOrder(location, dialog);
+            }
+            else Toast.makeText(context, "Location permissions are needed to proceed", Toast.LENGTH_LONG).show();
         });
 
         dialog.show();
@@ -224,5 +243,26 @@ public class CreateOrder {
             Toast.makeText(context, "Order Created", Toast.LENGTH_LONG).show();
         } else Toast.makeText(context, "You need more than " + book.getValue() + " points to complete this order", Toast.LENGTH_LONG).show();
         dialog.onBackPressed();
+    }
+
+    private Location getCurrentLoc() {
+        GPSTracker gpsTracker = new GPSTracker(context);
+        if(!gpsTracker.getIsGPSTrackingEnabled()) {
+            gpsTracker.showSettingsAlert();
+            gpsTracker.stopUsingGPS();
+        } else {
+            gpsTracker = new GPSTracker(context);
+            Location location = new Location(
+                    gpsTracker.getAddressLine(),
+                    gpsTracker.getLongitude(),
+                    gpsTracker.getLatitude()
+            );
+            location.setLocality(gpsTracker.getLocality());
+            location.setStreetAddress(gpsTracker.getStreet());
+            location.setPinCode(gpsTracker.getPostalCode());
+            location.setCity(gpsTracker.getCity());
+            return location;
+        }
+        return null;
     }
 }
