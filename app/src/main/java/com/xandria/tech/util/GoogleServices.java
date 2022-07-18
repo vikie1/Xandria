@@ -84,7 +84,11 @@ public class GoogleServices {
                 continue; // books missing the title should just be skipped
             }
             try {
-                book.setAuthors(currentBook.getJSONArray("authors").join(","));
+                book.setAuthors(
+                        currentBook.getJSONArray("authors")
+                                .join(", ")
+                                .replace("\"", "")
+                );
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -124,7 +128,15 @@ public class GoogleServices {
                 e.printStackTrace();
             }
             try {
-                book.setISBN(currentBook.getJSONArray("industryIdentifiers").toString());
+                book.setISBN(
+                        currentBook.getJSONArray("industryIdentifiers")
+                                .toString()
+                                .replaceAll("[\\[\\]{}]", "")
+                                .replace("\"", "")
+                                .replace(",identifier", " & identifier")
+                                .replace(",", ", ")
+                                .replace(":", ": ")
+                );
             } catch (JSONException e) {
                 e.printStackTrace();
             }
