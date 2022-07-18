@@ -109,30 +109,62 @@
             android:textSize="14sp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/regPhoneInputLayout"
+            android:orientation="horizontal"
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:hint="Enter your Phone Number"
-            style="@style/TextInputLayout"
-            android:padding="5dp"
-            app:hintTextColor="@color/white"
-            android:textColorHint="@color/white" >
-            <com.google.android.material.textfield.TextInputEditText
-                android:fontFamily="@font/play"
-                android:layout_width="match_parent"
+            android:layout_marginTop="20dp">
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:text="@string/enter_phone_number"/>-->
+            <com.hbb20.CountryCodePicker
+                android:id="@+id/ccp"
+                android:layout_width="wrap_content"
+                app:ccp_contentColor="@color/white"
                 android:layout_height="wrap_content"
-                android:id="@+id/regPhone"
-                android:importantForAutofill="no"
-                android:autofillHints="phone"
+                app:ccpDialog_textColor="@color/white"
+                app:ccp_hintExampleNumber="true"
+                app:ccp_autoDetectCountry="true"/>
+
+            <EditText
+                android:id="@+id/phone_number_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/contact"
                 android:inputType="phone"
+                android:singleLine="true"
                 android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:textSize="14sp"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:autofillHints="phone" />
+        </LinearLayout>
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:id="@+id/regPhoneInputLayout"-->
+<!--            android:layout_marginEnd="20dp"-->
+<!--            android:layout_marginStart="20dp"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:hint="Enter your Phone Number"-->
+<!--            style="@style/TextInputLayout"-->
+<!--            android:padding="5dp"-->
+<!--            app:hintTextColor="@color/white"-->
+<!--            android:textColorHint="@color/white" >-->
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:fontFamily="@font/play"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:id="@+id/regPhone"-->
+<!--                android:importantForAutofill="no"-->
+<!--                android:autofillHints="phone"-->
+<!--                android:inputType="phone"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textColorHint="@color/white"-->
+<!--                android:textSize="14sp"/>-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.hbb20.CountryCodePicker;
 import com.xandria.tech.R;
 import com.xandria.tech.constants.FirebaseRefs;
 import com.xandria.tech.model.User;
@@ -26,8 +28,10 @@ import java.util.Objects;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    private TextInputEditText username, email, password, confirmPwd, phone;
+    private TextInputEditText username, email, password, confirmPwd;
+    private EditText phone;
     private ProgressBar PB;
+    private CountryCodePicker ccp;
     private FirebaseAuth mAuth;
 
 
@@ -38,9 +42,10 @@ public class RegistrationActivity extends AppCompatActivity {
 
         username = findViewById(R.id.regUserName);
         email = findViewById(R.id.regEmail);
-        phone = findViewById(R.id.regPhone);
+        phone = findViewById(R.id.phone_number_input);
         password = findViewById(R.id.regPassword);
         confirmPwd = findViewById(R.id.regConfirmPassword);
+        ccp = findViewById(R.id.ccp);
         Button registerBtn = findViewById(R.id.RegisterBtn);
         TextView loginTxtBtn = findViewById(R.id.LoginTextBtn);
         PB = findViewById(R.id.loadingPB);
@@ -81,11 +86,14 @@ public class RegistrationActivity extends AppCompatActivity {
     private void setUpUser() {
         String email = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail();
         String userId = email != null ? email.replaceAll("[\\-+. ^:,]", "_") : null;
+        String contact = phone.getText().toString().trim().isEmpty() ?
+                null :
+                ccp.getSelectedCountryCodeWithPlus() + phone.getText().toString();
         User user = new User(
                 Objects.requireNonNull(username.getText()).toString(),
                 userId,
                 email,
-                Objects.requireNonNull(phone.getText()).toString()
+                contact
         );
 
         DatabaseReference userDBRef = FirebaseDatabase.getInstance().getReference(FirebaseRefs.USERS);
