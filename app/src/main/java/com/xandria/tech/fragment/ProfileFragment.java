@@ -241,7 +241,6 @@ public class ProfileFragment extends Fragment {
     }
 
     public void handlePaymentComplete(boolean success){
-        System.out.println("Yup Points: " + points);
         if (!success) return;
         // award the points on successful payment
         User user = LoggedInUser.getInstance().getCurrentUser();
@@ -249,7 +248,7 @@ public class ProfileFragment extends Fragment {
                 .getInstance()
                 .getReference(FirebaseRefs.USERS);
         userDBRef.child(user.getUserId()).child("points").setValue(
-                user.getPoints() - points
+                user.getPoints() + points
         );
     }
 }

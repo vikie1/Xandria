@@ -117,7 +117,7 @@ public class MapsFragment extends Fragment implements LocationListener {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 BookRecyclerModel bookRecyclerModel = snapshot.getValue(BookRecyclerModel.class);
-                if (bookRecyclerModel != null) {
+                if (bookRecyclerModel != null && bookRecyclerModel.getLocation() != null) {
                     createMarkers(
                             googleMap,
                             bookRecyclerModel.getLocation().getLatitude(),

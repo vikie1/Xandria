@@ -32,6 +32,7 @@ import com.xandria.tech.fragment.OrdersFragment;
 import com.xandria.tech.fragment.ProfileFragment;
 import com.xandria.tech.fragment.RequestFragment;
 import com.xandria.tech.fragment.ReturnedOrdersFragment;
+import com.xandria.tech.model.User;
 
 import java.util.Objects;
 
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener, PaymentResultListener {
 
     View headerView;
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

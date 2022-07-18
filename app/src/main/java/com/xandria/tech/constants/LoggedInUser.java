@@ -19,7 +19,6 @@ public class LoggedInUser {
     private static LoggedInUser loggedInUser;
     private User currentUser;
     private Context context;
-    private DatabaseReference userDatabaseReference;
 
     public static LoggedInUser getInstance(Context... context){
         if (loggedInUser == null) loggedInUser = new LoggedInUser();
@@ -58,8 +57,8 @@ public class LoggedInUser {
     private LoggedInUser(){ }
 
     private void getUser(DatabaseReference firebaseDatabaseReference, String userId) {
-        userDatabaseReference = firebaseDatabaseReference.child(userId);
-        userDatabaseReference.addValueEventListener(new ValueEventListener() {
+        firebaseDatabaseReference = firebaseDatabaseReference.child(userId);
+        firebaseDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 setCurrentUser(snapshot.getValue(User.class));
@@ -70,13 +69,5 @@ public class LoggedInUser {
                 Toast.makeText(context, "An error occurred while retrieving the details", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    public void setFirebaseDatabaseReference(DatabaseReference firebaseDatabaseReference) {
-        this.userDatabaseReference = firebaseDatabaseReference;
-    }
-
-    public DatabaseReference getFirebaseDatabaseReference() {
-        return userDatabaseReference;
     }
 }

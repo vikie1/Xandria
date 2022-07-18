@@ -99,17 +99,17 @@ public class OrdersFragment extends Fragment {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//                listViewAdapter.notifyDataSetChanged();
+                listViewAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-//                listViewAdapter.notifyDataSetChanged();
+                listViewAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//                listViewAdapter.notifyDataSetChanged();
+                listViewAdapter.notifyDataSetChanged();
             }
 
             @Override

@@ -39,7 +39,6 @@ import com.xandria.tech.model.BookRecyclerModel;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainFragment extends Fragment implements BookRecyclerAdapter.BookClickInterface{
     private DatabaseReference DbReference;
@@ -93,16 +92,13 @@ public class MainFragment extends Fragment implements BookRecyclerAdapter.BookCl
 
     private void getAllBooks() {
         bookRecyclerModelArrayList.clear();
-        AtomicInteger count = new AtomicInteger(0);
         DbReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 bookRecyclerModelArrayList.add(snapshot.getValue(BookRecyclerModel.class));
                 bookRecyclerAdapter.notifyItemInserted(bookRecyclerModelArrayList.size()-1);
 
-                if(count.incrementAndGet() != 0)
-                    ((ProgressBar) view.findViewById(R.id.loadingPB)).setVisibility(View.GONE); //hide progress bar
-                System.out.println(count.get() + " vs " + snapshot.getChildrenCount());
+                ((ProgressBar) view.findViewById(R.id.loadingPB)).setVisibility(View.GONE); //hide progress bar after first item loads
             }
 
             @Override
