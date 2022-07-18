@@ -104,4 +104,7 @@
     <string name="reg_text">New User? Register Here</string>
     <string name="login">Login</string>
     <string name="enter_your_password">Enter your Password</string>
+    <string name="enter_verification_code">Enter verification code</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="verify">Verify</string>
 </resources>

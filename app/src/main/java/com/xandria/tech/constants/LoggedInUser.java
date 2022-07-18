@@ -62,7 +62,6 @@ public class LoggedInUser {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 setCurrentUser(snapshot.getValue(User.class));
-                System.out.println("We added the user");
             }
 
             @Override
