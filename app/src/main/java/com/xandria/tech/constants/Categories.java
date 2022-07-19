@@ -11,31 +11,29 @@ import com.xandria.tech.model.CategoryModel;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class Categories {
     public static final String[] categories = {
             "Religion", "History", "Literature", "Politics", "Economics", "Business",
-            "Self Help", "Sciences", "Computer", "Mathematics", "Psychology", "Philosophy"
+            "Engineering", "Sciences", "Mathematics", "Psychology", "Philosophy"
     };
     public static final Map<String, String[]> categoriesMap = new HashMap<>();
 
     // this is not an exhaustive list, it just creates a place holder other subcategories should be added dynamically
     static void createCategoriesMap(){
-        categoriesMap.put("Religion", new String[]{"Hindu", "Christianity", "Islam"});
-        categoriesMap.put("History", new String[]{"Biographies", "Monarchs", "Wars"});
-        categoriesMap.put("Literature", new String[]{"Drama", "Fantasy", "Fiction"});
+        categoriesMap.put("Religion", new String[]{"Hindu", "Christianity", "Islam", "Catholic", "Protestant"});
+        categoriesMap.put("History", new String[]{"Biographies", "Monarchs", "Wars", "Era"});
+        categoriesMap.put("Literature", new String[]{"Classics", "Modern", "Sci-fi", "Romance"});
         categoriesMap.put("Politics", new String[]{"Laws", "Wars"});
-        categoriesMap.put("Economics", new String[]{"Microeconomics", "Macroeconomics", "Trade"});
+        categoriesMap.put("Economics", new String[]{"Microeconomics", "Macroeconomics", "Statistics", "Keynesian", "Austrian", "Games", "Probability"});
         categoriesMap.put("Business", new String[]{"Startups", "Entrepreneur"});
-        categoriesMap.put("Self Help", new String[]{"Diet", "Motivation", "Inspiration", "Mindfulness"});
-        categoriesMap.put("Sciences", new String[]{"Biology", "History", "Physics"});
-        categoriesMap.put("Computer", new String[]{"Technology", "Programming", "Software", "Hardware"});
-        categoriesMap.put("Mathematics", new String[]{"Algebra", "Number", "Arithmetic", "Calculus", "Numerical Analysis"});
-        categoriesMap.put("Psychology", new String[]{"Personality", "Cognitive", "Social"});
-        categoriesMap.put("Philosophy", new String[]{"Metaphysics", "Epistemology", "Axiology", "Logic"});
+        categoriesMap.put("Sciences", new String[]{"Biology", "Chemistry", "Physics"});
+        categoriesMap.put("Mathematics", new String[]{"Algebra", "Applied", "Pure", "Arithmetic", "Calculus", "Numerical Analysis"});
+        categoriesMap.put("Psychology", new String[]{"Family", "Developmental", "Relationships", "Self-help"});
+        categoriesMap.put("Philosophy", new String[]{"Metaphysics", "Epistemology", "Anthropology", "Marxist", "Anarchist", "Eastern", "Western"});
+        categoriesMap.put("Engineering", new String[]{"Computer", "Aerospace", "Civil", "Hardware", "Software"});
     }
 
     static final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(FirebaseRefs.CATEGORIES);
