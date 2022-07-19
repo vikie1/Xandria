@@ -6,6 +6,7 @@
         <entry key="app/src/main/res/drawable-v24/custom_border.xml" value="0.1715" />
         <entry key="app/src/main/res/drawable-v24/search_input.xml" value="0.1715" />
         <entry key="app/src/main/res/drawable/round_drawable.xml" value="0.1715" />
+        <entry key="app/src/main/res/font/major_mono_display.xml" value="0.22239583333333332" />
         <entry key="app/src/main/res/layout-v28/toolbar_main.xml" value="0.17028985507246377" />
         <entry key="app/src/main/res/layout/activity_add_book.xml" value="0.17028985507246377" />
         <entry key="app/src/main/res/layout/activity_book_details.xml" value="0.17028985507246377" />
