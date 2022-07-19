@@ -2,6 +2,7 @@ package com.xandria.tech.dialogues;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.hbb20.CountryCodePicker;
 import com.xandria.tech.R;
+import com.xandria.tech.activity.order.OrderRouteActivity;
 import com.xandria.tech.constants.FirebaseRefs;
 import com.xandria.tech.constants.LoggedInUser;
 import com.xandria.tech.dto.Location;
@@ -119,7 +121,15 @@ public class CreateOrder {
             }
             Location location = book.getLocation();
             if (location != null) {
-                createOrder(location, dialog);
+                createOrder(location);
+
+                Toast.makeText(context, "Order has been placed see book location in map", Toast.LENGTH_LONG).show();
+
+                // take user to location of book
+                Intent intent = new Intent(context, OrderRouteActivity.class);
+                intent.putExtra(OrderRouteActivity.ORDER_LOCATION, location);
+                intent.putExtra(OrderRouteActivity.BOOK_ORDERED, book.getTitle());
+                context.startActivity(intent);
             }
             else Toast.makeText(context, "Location is permissions are needed to proceed", Toast.LENGTH_LONG).show();
         });
@@ -176,12 +186,14 @@ public class CreateOrder {
                     String.valueOf(city.getText()),
                     String.valueOf(pinCode.getText())
             );
-            createOrder(location, dialog);
+            createOrder(location);
+            dialog.onBackPressed();
         });
         useCurrent.setOnClickListener(v -> {
             Location location = getCurrentLoc();
             if (location != null) {
-                createOrder(location, dialog);
+                createOrder(location);
+                dialog.onBackPressed();
             }
             else Toast.makeText(context, "Location permissions are needed to proceed", Toast.LENGTH_LONG).show();
         });
@@ -189,7 +201,7 @@ public class CreateOrder {
         dialog.show();
     }
 
-    private void createOrder(Location dropLocation, Dialog dialog) {
+    private void createOrder(Location dropLocation) {
         OrdersModel newOrder = new OrdersModel(
                 userId, // let user be the orders id
                 book.getBookID(),
@@ -242,7 +254,6 @@ public class CreateOrder {
             firebaseDatabaseRef.child(newOrder.getOrderId()).child(newOrder.getBookId()).setValue(newOrder);
             Toast.makeText(context, "Order Created", Toast.LENGTH_LONG).show();
         } else Toast.makeText(context, "You need more than " + book.getValue() + " points to complete this order", Toast.LENGTH_LONG).show();
-        dialog.onBackPressed();
     }
 
     private Location getCurrentLoc() {

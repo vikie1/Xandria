@@ -32,7 +32,7 @@ public class BookDetails{
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.black)));
 
         populateBookView(book, dialog, context);
-        handleButtonClicks(book,dialog, context);
+        handleButtonClicks(book, dialog, context);
         return dialog;
     }
 

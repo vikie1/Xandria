@@ -18,6 +18,9 @@
         tools:targetApi="m">
 
         <activity
+            android:name=".activity.order.OrderRouteActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.book.BookDiscussionActivity"
             android:exported="false" />
         <activity
@@ -61,11 +64,11 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
         <meta-data
+            android:name="com.razorpay.ApiKey"
+            android:value="${RAZOR_PAY_KEY_SECRET}" />
+        <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
-        <meta-data
-            android:name="com.razorpay.ApiKey"
-            android:value="${RAZOR_PAY_KEY_SECRET}"/>
     </application>
 
 </manifest>

@@ -1,6 +1,5 @@
 package com.xandria.tech.fragment;
 
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -26,20 +25,16 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.xandria.tech.R;
-import com.xandria.tech.constants.FirebaseRefs;
-import com.xandria.tech.model.BookRecyclerModel;
+import com.xandria.tech.activity.order.OrderRouteActivity;
 import com.xandria.tech.util.GPSTracker;
 
-public class MapsFragment extends Fragment implements LocationListener {
-    double currentLatitude, currentLongitude;
+public class OrderRouteMapFragment extends Fragment implements LocationListener {
+    private com.xandria.tech.dto.Location orderLocation;
+    private String bookTitle;
+
+    private double currentLatitude, currentLongitude;
     private GPSTracker gpsTracker;
-    private DatabaseReference databaseReference;
     private GoogleMap googleMap;
     private Marker currentLocationMarker;
 
@@ -68,12 +63,11 @@ public class MapsFragment extends Fragment implements LocationListener {
                 currentLatitude = gpsTracker.getLatitude();
                 currentLongitude = gpsTracker.getLongitude();
             } else gpsTracker.showSettingsAlert();
-            MapsFragment.this.googleMap = googleMap;
+
+            OrderRouteMapFragment.this.googleMap = googleMap;
             createMarkerForCurrentLoc();
 
-            databaseReference = FirebaseDatabase.getInstance().getReference(FirebaseRefs.BOOKS);
-
-            getAllBooks(googleMap);
+            createTargetMarkers(googleMap);
         }
     };
 
@@ -82,7 +76,10 @@ public class MapsFragment extends Fragment implements LocationListener {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_maps, container, false);
+
+        orderLocation = getArguments() != null ? getArguments().getParcelable(OrderRouteActivity.ORDER_LOCATION) : null;
+        bookTitle = getArguments().getString(OrderRouteActivity.BOOK_ORDERED);
+        return inflater.inflate(R.layout.fragment_order_route_map, container, false);
     }
 
     @Override
@@ -92,6 +89,17 @@ public class MapsFragment extends Fragment implements LocationListener {
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
+        }
+    }
+
+    public void createMarkerForCurrentLoc(){
+        if(googleMap != null) {
+
+            if (currentLocationMarker != null) currentLocationMarker.remove();
+
+            LatLng currentLocation = new LatLng(currentLatitude, currentLongitude);
+            currentLocationMarker = googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Current location"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
         }
     }
 
@@ -110,92 +118,21 @@ public class MapsFragment extends Fragment implements LocationListener {
         if(gpsTracker.getIsGPSTrackingEnabled()){
             currentLatitude = gpsTracker.getLatitude();
             currentLongitude = gpsTracker.getLongitude();
+            createMarkerForCurrentLoc();
         } else gpsTracker.showSettingsAlert();
-
-        createMarkerForCurrentLoc();
     }
 
-    public void createMarkerForCurrentLoc(){
-        if(googleMap != null) {
-            if (currentLocationMarker != null) currentLocationMarker.remove();
-
-            LatLng currentLocation = new LatLng(currentLatitude, currentLongitude);
-            currentLocationMarker = googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Current location"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
-        }
-    }
-
-    void createMarkers(GoogleMap googleMap, double latitude, double longitude, String title){
-        LatLng currentLocation = new LatLng(latitude, longitude);
+    private void createTargetMarkers(GoogleMap googleMap){
+        if (orderLocation == null) return;
+        LatLng currentLocation = new LatLng(orderLocation.getLatitude(), orderLocation.getLongitude());
         googleMap.addMarker(
                 new MarkerOptions()
                         .position(currentLocation)
-                        .title(title)
+                        .title((bookTitle == null) ? "Target Book Location" : bookTitle)
                         .icon(
-                                bitmapDescriptorFromVector(context, R.drawable.ic_baseline_menu_book_24)
+                                bitmapDescriptorFromVector(context, R.drawable.ic_baseline_approval_24)
                         )
         );
-    }
-
-    private void getAllBooks(GoogleMap googleMap) {
-        databaseReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                BookRecyclerModel bookRecyclerModel = snapshot.getValue(BookRecyclerModel.class);
-                if (bookRecyclerModel != null && bookRecyclerModel.getLocation() != null) {
-                    createMarkers(
-                            googleMap,
-                            bookRecyclerModel.getLocation().getLatitude(),
-                            bookRecyclerModel.getLocation().getLongitude(),
-                            bookRecyclerModel.getTitle()
-                    );
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                BookRecyclerModel bookRecyclerModel = snapshot.getValue(BookRecyclerModel.class);
-                if (bookRecyclerModel != null) {
-                    createMarkers(
-                            googleMap,
-                            bookRecyclerModel.getLocation().getLatitude(),
-                            bookRecyclerModel.getLocation().getLongitude(),
-                            bookRecyclerModel.getTitle()
-                    );
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                BookRecyclerModel bookRecyclerModel = snapshot.getValue(BookRecyclerModel.class);
-                if (bookRecyclerModel != null) {
-                    createMarkers(
-                            googleMap,
-                            bookRecyclerModel.getLocation().getLatitude(),
-                            bookRecyclerModel.getLocation().getLongitude(),
-                            bookRecyclerModel.getTitle()
-                    );
-                }
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                BookRecyclerModel bookRecyclerModel = snapshot.getValue(BookRecyclerModel.class);
-                if (bookRecyclerModel != null) {
-                    createMarkers(
-                            googleMap,
-                            bookRecyclerModel.getLocation().getLatitude(),
-                            bookRecyclerModel.getLocation().getLongitude(),
-                            bookRecyclerModel.getTitle()
-                    );
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
@@ -207,5 +144,4 @@ public class MapsFragment extends Fragment implements LocationListener {
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
-
 }
