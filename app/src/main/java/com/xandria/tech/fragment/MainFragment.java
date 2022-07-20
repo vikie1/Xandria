@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -33,11 +34,15 @@ import com.xandria.tech.activity.book.BookDetailsActivity;
 import com.xandria.tech.activity.book.EditBookActivity;
 import com.xandria.tech.activity.order.CreateOrderActivity;
 import com.xandria.tech.adapter.BookRecyclerAdapter;
+import com.xandria.tech.adapter.CategoriesRecyclerAdapter;
+import com.xandria.tech.constants.Categories;
 import com.xandria.tech.constants.FirebaseRefs;
 import com.xandria.tech.dialogues.BookDetails;
 import com.xandria.tech.model.BookRecyclerModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class MainFragment extends Fragment implements BookRecyclerAdapter.BookClickInterface{
@@ -61,6 +66,7 @@ public class MainFragment extends Fragment implements BookRecyclerAdapter.BookCl
         view = inflater.inflate(R.layout.fragment_main, container, false);
 
         RecyclerView bookRecycler = view.findViewById(R.id.bookRecycler);
+        RecyclerView categoriesRecycler = view.findViewById(R.id.categories_list);
         FirebaseDatabase fireDb = FirebaseDatabase.getInstance();
         DbReference = fireDb.getReference(FirebaseRefs.BOOKS);
         bottom_sheet = view.findViewById(R.id.bottomSheet);
@@ -68,9 +74,13 @@ public class MainFragment extends Fragment implements BookRecyclerAdapter.BookCl
 
         // I have commented on this part so that you can place categories as you said in the call
         // It was still far from done so feel free to start afresh
-//        CustomArrayAdapter listViewAdapter = new CustomArrayAdapter(context, Arrays.asList(Categories.categories));
-//        ListView catListView = view.findViewById(R.id.categories_list);
-//        catListView.setAdapter(listViewAdapter);
+        List<String> categories = new ArrayList<>();
+        CategoriesRecyclerAdapter categoriesAdapter = new CategoriesRecyclerAdapter(context, categories);
+        categoriesRecycler.setAdapter(categoriesAdapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        categoriesRecycler.setLayoutManager(linearLayoutManager);
+        categories.addAll(Arrays.asList(Categories.categories));
 
         bookRecyclerModelArrayList = new ArrayList<>();
         bookRecyclerAdapter = new BookRecyclerAdapter(bookRecyclerModelArrayList, context, this);

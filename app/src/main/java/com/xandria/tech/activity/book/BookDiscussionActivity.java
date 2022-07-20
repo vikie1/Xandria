@@ -1,9 +1,5 @@
 package com.xandria.tech.activity.book;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.widget.AbsListView;
 import android.widget.EditText;
@@ -11,6 +7,10 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -21,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.xandria.tech.R;
 import com.xandria.tech.adapter.DiscussionChatsAdapter;
 import com.xandria.tech.constants.FirebaseRefs;
+import com.xandria.tech.constants.LoggedInUser;
 import com.xandria.tech.model.DiscussionModel;
 
 import java.util.ArrayList;
@@ -102,6 +103,7 @@ public class BookDiscussionActivity extends AppCompatActivity {
                 discussion.setSender(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail());
                 discussion.setMessage(messageEditText.getText().toString());
                 discussion.setTimeSent();
+                discussion.setSenderName(LoggedInUser.getInstance().getCurrentUser().getName());
 
                 firebaseDatabaseReference.child(bookId).setValue(discussion);
                 Toast.makeText(BookDiscussionActivity.this, "Message sent", Toast.LENGTH_SHORT).show();

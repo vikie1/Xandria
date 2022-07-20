@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.MainFragment">
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -12,11 +12,11 @@
         android:id="@+id/main_fragment">
 
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="200dp"-->
-<!--                android:id="@+id/categories_list_layout"-->
-<!--                android:orientation="vertical">-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/categories_list_layout"
+                android:orientation="horizontal">
 
 <!--                <ListView-->
 <!--                    android:id="@+id/categories_list"-->
@@ -24,7 +24,12 @@
 <!--                    android:rotation="-90"-->
 <!--                    android:layout_height="match_parent" />-->
 
-<!--            </LinearLayout>-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/categories_list"/>
+
+            </LinearLayout>
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -32,20 +37,18 @@
             android:layout_height="wrap_content"
             android:id="@+id/bookRecycler"/>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:padding="3dp"
-            android:id="@+id/addFab"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_gravity="bottom|end"
-            android:background="@color/marron_shade"
-            android:src="@drawable/ic_baseline_add_24"
-            android:contentDescription="@string/add_book_fab" />
-    </RelativeLayout>
+    </LinearLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:padding="3dp"
+        android:id="@+id/addFab"
+        android:layout_gravity="bottom|end"
+        android:background="@color/marron_shade"
+        android:src="@drawable/ic_baseline_add_24"
+        android:contentDescription="@string/add_book_fab" />
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
