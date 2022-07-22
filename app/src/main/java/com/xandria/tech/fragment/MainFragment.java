@@ -27,6 +27,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.xandria.tech.R;
 import com.xandria.tech.activity.book.AddBookActivity;
@@ -39,18 +40,20 @@ import com.xandria.tech.constants.Categories;
 import com.xandria.tech.constants.FirebaseRefs;
 import com.xandria.tech.dialogues.BookDetails;
 import com.xandria.tech.model.BookRecyclerModel;
+import com.xandria.tech.model.CategoryModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class MainFragment extends Fragment implements BookRecyclerAdapter.BookClickInterface{
+public class MainFragment extends Fragment implements BookRecyclerAdapter.BookClickInterface, CategoriesRecyclerAdapter.CategoryClicked {
     private DatabaseReference DbReference;
     private ArrayList<BookRecyclerModel> bookRecyclerModelArrayList;
     private RelativeLayout bottom_sheet;
     private BookRecyclerAdapter bookRecyclerAdapter;
     private FirebaseAuth mAuth;
+    private RecyclerView bookRecycler;
 
     private Context context;
     private View view;
@@ -65,7 +68,7 @@ public class MainFragment extends Fragment implements BookRecyclerAdapter.BookCl
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        RecyclerView bookRecycler = view.findViewById(R.id.bookRecycler);
+        bookRecycler = view.findViewById(R.id.bookRecycler);
         RecyclerView categoriesRecycler = view.findViewById(R.id.categories_list);
         FirebaseDatabase fireDb = FirebaseDatabase.getInstance();
         DbReference = fireDb.getReference(FirebaseRefs.BOOKS);
@@ -75,7 +78,7 @@ public class MainFragment extends Fragment implements BookRecyclerAdapter.BookCl
         // I have commented on this part so that you can place categories as you said in the call
         // It was still far from done so feel free to start afresh
         List<String> categories = new ArrayList<>();
-        CategoriesRecyclerAdapter categoriesAdapter = new CategoriesRecyclerAdapter(context, categories);
+        CategoriesRecyclerAdapter categoriesAdapter = new CategoriesRecyclerAdapter(context, categories, this);
         categoriesRecycler.setAdapter(categoriesAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -137,10 +140,6 @@ public class MainFragment extends Fragment implements BookRecyclerAdapter.BookCl
 
     @Override
     public void onBookClick(int position) {
-//        createBottomDialog(bookRecyclerModelArrayList.get(position));
-//        Intent intent = new Intent(context, BookDetailsActivity.class);
-//        intent.putExtra(BookDetailsActivity.EXTRA_BOOK, bookRecyclerModelArrayList.get(position));
-//        startActivity(intent);
         BookDetails bookDetails = new BookDetails();
         bookDetails.createDialogue(context, bookRecyclerModelArrayList.get(position)).show();
     }
@@ -196,4 +195,59 @@ public class MainFragment extends Fragment implements BookRecyclerAdapter.BookCl
         });
     }
 
+    @Override
+    public void onCategoryClick(String category) {
+        pastMainCat = false;
+        getFilteredBook(category); // start populating for the main category while we search for sub categories
+
+        DatabaseReference categoryReference = FirebaseDatabase.getInstance().getReference(FirebaseRefs.CATEGORIES);
+        categoryReference.child(category).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                CategoryModel categoryModel = snapshot.getValue(CategoryModel.class);
+                for (String subCategory : categoryModel.getSubCategories()) {
+                    getFilteredBook(subCategory);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    boolean pastMainCat = false; // if books have been found in main category then append books from subcategories to that list else create new list
+    private void getFilteredBook(String category){
+        ArrayList<BookRecyclerModel> bookRecyclerModels;
+        if (pastMainCat) bookRecyclerModels = this.bookRecyclerModelArrayList;
+        else bookRecyclerModels = new ArrayList<>();
+        DbReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot: snapshot.getChildren()){
+                    BookRecyclerModel bookRecyclerModel = dataSnapshot.getValue(BookRecyclerModel.class);
+                    if(bookRecyclerModel != null &&
+                            bookRecyclerModel.getCategory() != null &&
+                            bookRecyclerModel.getCategory().toLowerCase().contains(category.toLowerCase())) {
+
+                        if (!bookRecyclerModels.contains(bookRecyclerModel))
+                            bookRecyclerModels.add(bookRecyclerModel);
+                        System.out.println(bookRecyclerModel);
+                        System.out.println(category);
+                        pastMainCat = true;
+                    }
+                }
+                BookRecyclerAdapter newBookRecyclerAdapter = new BookRecyclerAdapter(bookRecyclerModels, context, MainFragment.this);
+                bookRecycler.setAdapter(newBookRecyclerAdapter);
+                MainFragment.this.bookRecyclerAdapter = newBookRecyclerAdapter;
+                MainFragment.this.bookRecyclerModelArrayList = bookRecyclerModels;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }

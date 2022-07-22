@@ -16,20 +16,19 @@ import java.util.Objects;
 
 public class Categories {
     public static final String[] categories = {
-            "Religion", "History", "Literature", "Politics", "Economics", "Business",
-            "Engineering", "Sciences", "Mathematics", "Psychology", "Philosophy"
+            "Religion", "History", "Literature", "Economics", "Psychology",
+            "Business", "Engineering", "Philosophy", "Science", "Mathematics"
     };
     public static final Map<String, String[]> categoriesMap = new HashMap<>();
 
     // this is not an exhaustive list, it just creates a place holder other subcategories should be added dynamically
     static void createCategoriesMap(){
         categoriesMap.put("Religion", new String[]{"Hindu", "Christianity", "Islam", "Catholic", "Protestant"});
-        categoriesMap.put("History", new String[]{"Biographies", "Monarchs", "Wars", "Era"});
+        categoriesMap.put("History", new String[]{"Biographies", "Monarchs", "Wars", "Era", "Politics"});
         categoriesMap.put("Literature", new String[]{"Classics", "Modern", "Sci-fi", "Romance"});
-        categoriesMap.put("Politics", new String[]{"Laws", "Wars"});
         categoriesMap.put("Economics", new String[]{"Microeconomics", "Macroeconomics", "Statistics", "Keynesian", "Austrian", "Games", "Probability"});
         categoriesMap.put("Business", new String[]{"Startups", "Entrepreneur"});
-        categoriesMap.put("Sciences", new String[]{"Biology", "Chemistry", "Physics"});
+        categoriesMap.put("Science", new String[]{"Biology", "Chemistry", "Physics"});
         categoriesMap.put("Mathematics", new String[]{"Algebra", "Applied", "Pure", "Arithmetic", "Calculus", "Numerical Analysis"});
         categoriesMap.put("Psychology", new String[]{"Family", "Developmental", "Relationships", "Self-help"});
         categoriesMap.put("Philosophy", new String[]{"Metaphysics", "Epistemology", "Anthropology", "Marxist", "Anarchist", "Eastern", "Western"});

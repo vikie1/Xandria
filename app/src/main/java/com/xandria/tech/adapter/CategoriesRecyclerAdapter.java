@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,10 +16,12 @@ import java.util.List;
 public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRecyclerAdapter.ViewHolder>{
     private final List<String> categories;
     private final Context context;
+    public final CategoryClicked categoryClicked;
 
-    public CategoriesRecyclerAdapter(Context context, List<String> categories) {
+    public CategoriesRecyclerAdapter(Context context, List<String> categories, CategoryClicked categoryClicked) {
         this.context = context;
         this.categories = categories;
+        this.categoryClicked = categoryClicked;
     }
 
     @NonNull
@@ -34,7 +35,7 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String category = categories.get(position);
         holder.categoryView.setText(category);
-        holder.categoryView.setOnClickListener(v -> Toast.makeText(v.getContext(), category + " clicked", Toast.LENGTH_SHORT).show());
+        holder.categoryView.setOnClickListener(v -> categoryClicked.onCategoryClick(category));
     }
 
     @Override
@@ -49,5 +50,9 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
             super(itemView);
             categoryView = itemView.findViewById(R.id.simple_list_text);
         }
+    }
+
+    public interface CategoryClicked{
+        void onCategoryClick(String category);
     }
 }

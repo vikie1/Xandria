@@ -28,4 +28,12 @@ public class CategoryModel {
     public void setSubCategories(List<String> subCategories) {
         if (subCategories != null) this.subCategories.addAll(subCategories);
     }
+
+    @Override
+    public String toString() {
+        return "CategoryModel{" +
+                "categoryName='" + categoryName + '\'' +
+                ", subCategories=" + subCategories +
+                '}';
+    }
 }
