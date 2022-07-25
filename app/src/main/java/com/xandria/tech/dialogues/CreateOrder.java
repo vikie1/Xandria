@@ -35,7 +35,6 @@ import com.xandria.tech.dto.Location;
 import com.xandria.tech.model.BookRecyclerModel;
 import com.xandria.tech.model.OrdersModel;
 import com.xandria.tech.model.User;
-import com.xandria.tech.util.GPSTracker;
 
 import java.util.Objects;
 

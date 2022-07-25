@@ -1,22 +1,28 @@
 package com.xandria.tech.fragment;
 
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -34,21 +40,35 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.xandria.tech.R;
 import com.xandria.tech.constants.FirebaseRefs;
 import com.xandria.tech.model.BookRecyclerModel;
-import com.xandria.tech.util.GPSTracker;
 
-public class MapsFragment extends Fragment implements LocationListener {
+public class MapsFragment extends Fragment {
     double currentLatitude, currentLongitude;
-    private GPSTracker gpsTracker;
     private DatabaseReference databaseReference;
     private GoogleMap googleMap;
     private Marker currentLocationMarker;
+    private FusedLocationProviderClient mFusedLocationClient;
+
+    // request for location permission
+    private ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), location -> {
+                        if (location != null) {
+                            currentLatitude = location.getLatitude();
+                            currentLongitude = location.getLongitude();
+                            createMarkerForCurrentLoc();
+                        }
+                    });
+                } else {
+                    Toast.makeText(getContext(), "App won't function optimum without location permission", Toast.LENGTH_LONG).show();
+                }
+            });
 
     private Context context;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
-        gpsTracker = new GPSTracker(context);
     }
 
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
@@ -64,11 +84,8 @@ public class MapsFragment extends Fragment implements LocationListener {
          */
         @Override
         public void onMapReady(@NonNull GoogleMap googleMap) {
-            if(gpsTracker.getIsGPSTrackingEnabled()){
-                currentLatitude = gpsTracker.getLatitude();
-                currentLongitude = gpsTracker.getLongitude();
-            } else gpsTracker.showSettingsAlert();
             MapsFragment.this.googleMap = googleMap;
+            checkLocationPermission();
             createMarkerForCurrentLoc();
 
             databaseReference = FirebaseDatabase.getInstance().getReference(FirebaseRefs.BOOKS);
@@ -88,6 +105,7 @@ public class MapsFragment extends Fragment implements LocationListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
@@ -95,33 +113,28 @@ public class MapsFragment extends Fragment implements LocationListener {
         }
     }
 
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-        currentLatitude = location.getLatitude();
-        currentLongitude = location.getLongitude();
-        createMarkerForCurrentLoc();
-    }
-
-    @Override
-    public void onProviderEnabled(@NonNull String provider) {
-        LocationListener.super.onProviderEnabled(provider);
-        gpsTracker = new GPSTracker(context);
-
-        if(gpsTracker.getIsGPSTrackingEnabled()){
-            currentLatitude = gpsTracker.getLatitude();
-            currentLongitude = gpsTracker.getLongitude();
-        } else gpsTracker.showSettingsAlert();
-
-        createMarkerForCurrentLoc();
+    void checkLocationPermission(){
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ){
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+        } else{
+            mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), location -> {
+                if (location != null) {
+                    currentLatitude = location.getLatitude();
+                    currentLongitude = location.getLongitude();
+                    createMarkerForCurrentLoc();
+                }
+            });
+        }
     }
 
     public void createMarkerForCurrentLoc(){
+
         if(googleMap != null) {
             if (currentLocationMarker != null) currentLocationMarker.remove();
 
             LatLng currentLocation = new LatLng(currentLatitude, currentLongitude);
             currentLocationMarker = googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Current location"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 11));
         }
     }
 

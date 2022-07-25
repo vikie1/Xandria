@@ -30,7 +30,6 @@ import com.xandria.tech.adapter.GoogleBooksListViewAdapter;
 import com.xandria.tech.constants.FirebaseRefs;
 import com.xandria.tech.dto.Location;
 import com.xandria.tech.model.BookRecyclerModel;
-import com.xandria.tech.util.GPSTracker;
 import com.xandria.tech.util.GoogleServices;
 import com.xandria.tech.util.Points;
 

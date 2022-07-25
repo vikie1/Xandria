@@ -27,7 +27,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.xandria.tech.R;
 import com.xandria.tech.activity.order.OrderRouteActivity;
-import com.xandria.tech.util.GPSTracker;
 
 public class OrderRouteMapFragment extends Fragment implements LocationListener {
     private com.xandria.tech.dto.Location orderLocation;
