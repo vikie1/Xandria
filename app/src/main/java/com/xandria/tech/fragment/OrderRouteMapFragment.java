@@ -4,12 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,22 +26,24 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.xandria.tech.R;
 import com.xandria.tech.activity.order.OrderRouteActivity;
+import com.xandria.tech.dto.Location;
+import com.xandria.tech.util.LocationUtils;
 
-public class OrderRouteMapFragment extends Fragment implements LocationListener {
-    private com.xandria.tech.dto.Location orderLocation;
+public class OrderRouteMapFragment extends Fragment implements LocationUtils.LocationPermissionResult {
+    Location orderLocation;
     private String bookTitle;
 
     private double currentLatitude, currentLongitude;
-    private GPSTracker gpsTracker;
     private GoogleMap googleMap;
     private Marker currentLocationMarker;
+    private LocationUtils locationUtils;
 
     private Context context;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
-        gpsTracker = new GPSTracker(context);
+        locationUtils = new LocationUtils(OrderRouteMapFragment.this, context, OrderRouteMapFragment.this);
     }
 
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
@@ -58,13 +59,14 @@ public class OrderRouteMapFragment extends Fragment implements LocationListener 
          */
         @Override
         public void onMapReady(@NonNull GoogleMap googleMap) {
-            if(gpsTracker.getIsGPSTrackingEnabled()){
-                currentLatitude = gpsTracker.getLatitude();
-                currentLongitude = gpsTracker.getLongitude();
-            } else gpsTracker.showSettingsAlert();
-
             OrderRouteMapFragment.this.googleMap = googleMap;
-            createMarkerForCurrentLoc();
+
+            LatLng latLng = locationUtils.getLatLng();
+            if (latLng != null) {
+                currentLatitude = latLng.latitude;
+                currentLongitude = latLng.longitude;
+                createMarkerForCurrentLoc();
+            }
 
             createTargetMarkers(googleMap);
         }
@@ -102,25 +104,6 @@ public class OrderRouteMapFragment extends Fragment implements LocationListener 
         }
     }
 
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-        currentLatitude = location.getLatitude();
-        currentLongitude = location.getLongitude();
-        createMarkerForCurrentLoc();
-    }
-
-    @Override
-    public void onProviderEnabled(@NonNull String provider) {
-        LocationListener.super.onProviderEnabled(provider);
-        gpsTracker = new GPSTracker(context);
-
-        if(gpsTracker.getIsGPSTrackingEnabled()){
-            currentLatitude = gpsTracker.getLatitude();
-            currentLongitude = gpsTracker.getLongitude();
-            createMarkerForCurrentLoc();
-        } else gpsTracker.showSettingsAlert();
-    }
-
     private void createTargetMarkers(GoogleMap googleMap){
         if (orderLocation == null) return;
         LatLng currentLocation = new LatLng(orderLocation.getLatitude(), orderLocation.getLongitude());
@@ -142,5 +125,16 @@ public class OrderRouteMapFragment extends Fragment implements LocationListener 
         Canvas canvas = new Canvas(bitmap);
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    @Override
+    public void onPermissionGranted(LatLng latLng) {
+        currentLatitude = latLng.latitude;
+        currentLongitude = latLng.longitude;
+    }
+
+    @Override
+    public void onPermissionDeclined() {
+        Toast.makeText(context, "App won't function optimum without location permission", Toast.LENGTH_LONG).show();
     }
 }

@@ -31,6 +31,7 @@ import com.xandria.tech.constants.FirebaseRefs;
 import com.xandria.tech.dto.Location;
 import com.xandria.tech.model.BookRecyclerModel;
 import com.xandria.tech.util.GoogleServices;
+import com.xandria.tech.util.LocationUtils;
 import com.xandria.tech.util.Points;
 
 import java.io.IOException;
@@ -242,21 +243,17 @@ public class AddBookActivity extends AppCompatActivity {
     }
 
     private Location getCurrentLoc() {
-        GPSTracker gpsTracker = new GPSTracker(this);
-        if(!gpsTracker.getIsGPSTrackingEnabled()) {
-            gpsTracker.showSettingsAlert();
-            gpsTracker.stopUsingGPS();
-        } else {
-            gpsTracker = new GPSTracker(this);
+        LocationUtils locationUtils = new LocationUtils(this);
+        if (locationUtils.getLatLng() != null) {
             Location location = new Location(
-                    gpsTracker.getAddressLine(),
-                    gpsTracker.getLongitude(),
-                    gpsTracker.getLatitude()
+                    locationUtils.getAddressLine(),
+                    locationUtils.getLatLng().longitude,
+                    locationUtils.getLatLng().latitude
             );
-            location.setLocality(gpsTracker.getLocality());
-            location.setStreetAddress(gpsTracker.getStreet());
-            location.setPinCode(gpsTracker.getPostalCode());
-            location.setCity(gpsTracker.getCity());
+            location.setLocality(locationUtils.getLocality());
+            location.setStreetAddress(locationUtils.getStreet());
+            location.setPinCode(locationUtils.getPostalCode());
+            location.setCity(locationUtils.getCity());
             return location;
         }
         return null;

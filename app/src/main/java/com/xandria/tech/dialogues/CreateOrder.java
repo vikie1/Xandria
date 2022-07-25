@@ -10,13 +10,13 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +35,7 @@ import com.xandria.tech.dto.Location;
 import com.xandria.tech.model.BookRecyclerModel;
 import com.xandria.tech.model.OrdersModel;
 import com.xandria.tech.model.User;
+import com.xandria.tech.util.LocationUtils;
 
 import java.util.Objects;
 
@@ -65,7 +66,7 @@ public class CreateOrder {
             ((TextView)dialog.findViewById(R.id.contact_string)).setText(LoggedInUser.getInstance().getCurrentUser().getPhoneNumber());
         } else viewSwitcher.setDisplayedChild(1);
 
-        ((Button)dialog.findViewById(R.id.get_contact_btn)).setVisibility(View.GONE);
+        dialog.findViewById(R.id.get_contact_btn).setVisibility(View.GONE);
         TextView switcherTextView = dialog.findViewById(R.id.contact_change);
 
         switcherTextView.setOnClickListener(v -> viewSwitcher.setDisplayedChild(1));
@@ -81,7 +82,7 @@ public class CreateOrder {
 
         ((Button)dialog.findViewById(R.id.use_current)).setText(context.getResources().getString(R.string.pick_up));
         ((Button)dialog.findViewById(R.id.use_preferred)).setText(context.getResources().getString(R.string.delivery));
-        ((Button)dialog.findViewById(R.id.proceed_btn)).setVisibility(View.GONE);
+        dialog.findViewById(R.id.proceed_btn).setVisibility(View.GONE);
 
         addContact(dialog);
         handleChoiceDialogueButtonClicks(dialog);
@@ -165,7 +166,7 @@ public class CreateOrder {
         dialog.setContentView(R.layout.location_input);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.black)));
 
-        ((LinearLayout) dialog.findViewById(R.id.use_current_layout)).setVisibility(View.VISIBLE);
+        dialog.findViewById(R.id.use_current_layout).setVisibility(View.VISIBLE);
         TextInputEditText streetAddress = dialog.findViewById(R.id.street_address);
         TextInputEditText locality = dialog.findViewById(R.id.locality);
         TextInputEditText city = dialog.findViewById(R.id.city);
@@ -256,21 +257,17 @@ public class CreateOrder {
     }
 
     private Location getCurrentLoc() {
-        GPSTracker gpsTracker = new GPSTracker(context);
-        if(!gpsTracker.getIsGPSTrackingEnabled()) {
-            gpsTracker.showSettingsAlert();
-            gpsTracker.stopUsingGPS();
-        } else {
-            gpsTracker = new GPSTracker(context);
+        LocationUtils locationUtils = new LocationUtils((AppCompatActivity) context);
+        if (locationUtils.getLatLng() != null) {
             Location location = new Location(
-                    gpsTracker.getAddressLine(),
-                    gpsTracker.getLongitude(),
-                    gpsTracker.getLatitude()
+                    locationUtils.getAddressLine(),
+                    locationUtils.getLatLng().longitude,
+                    locationUtils.getLatLng().latitude
             );
-            location.setLocality(gpsTracker.getLocality());
-            location.setStreetAddress(gpsTracker.getStreet());
-            location.setPinCode(gpsTracker.getPostalCode());
-            location.setCity(gpsTracker.getCity());
+            location.setLocality(locationUtils.getLocality());
+            location.setStreetAddress(locationUtils.getStreet());
+            location.setPinCode(locationUtils.getPostalCode());
+            location.setCity(locationUtils.getCity());
             return location;
         }
         return null;
