@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -39,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class AddBookActivity extends AppCompatActivity {
+public class AddBookActivity extends AppCompatActivity implements LocationUtils.LocationPermissionResult{
     public static final String EXTRA_BOOK_REQUEST = "request";
     public static final String EXTRA_IS_MANUAL_INPUT = "manualInput";
 
@@ -49,6 +50,10 @@ public class AddBookActivity extends AppCompatActivity {
 
     GoogleBooksListViewAdapter googleBooksListViewAdapter;
     private boolean request;
+
+    LocationUtils locationUtils;
+    private Location location;
+    private boolean isLocationPermissionAccepted = false;
 
     //    ViewSwitcher viewSwitcher;
     @Override
@@ -197,12 +202,14 @@ public class AddBookActivity extends AppCompatActivity {
             Toast.makeText(AddBookActivity.this, "Location is needed to save book", Toast.LENGTH_LONG).show();
         });
         useCurrent.setOnClickListener(v -> {
-            Location location = getCurrentLoc();
             if (location != null) {
                 book.setLocation(location);
                 saveBook(book);
+            } else if (isLocationPermissionAccepted && locationUtils != null){
+                book.setLocation(locationUtils.getCurrentLoc());
+                saveBook(book);
             }
-            else Toast.makeText(AddBookActivity.this, "Location permissions are needed to proceed", Toast.LENGTH_LONG).show();
+            else Toast.makeText(this, "Location could not be determined", Toast.LENGTH_LONG).show();
         });
         useNew.setOnClickListener(v ->{
             dialog.dismiss();
@@ -242,23 +249,6 @@ public class AddBookActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private Location getCurrentLoc() {
-        LocationUtils locationUtils = new LocationUtils(this);
-        if (locationUtils.getLatLng() != null) {
-            Location location = new Location(
-                    locationUtils.getAddressLine(),
-                    locationUtils.getLatLng().longitude,
-                    locationUtils.getLatLng().latitude
-            );
-            location.setLocality(locationUtils.getLocality());
-            location.setStreetAddress(locationUtils.getStreet());
-            location.setPinCode(locationUtils.getPostalCode());
-            location.setCity(locationUtils.getCity());
-            return location;
-        }
-        return null;
-    }
-
     private void addBookValue(BookRecyclerModel book){
         Dialog dialog = new Dialog(AddBookActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -294,5 +284,39 @@ public class AddBookActivity extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+
+    @Override
+    public void onPermissionGranted(LatLng latLng) {
+        isLocationPermissionAccepted = true;
+    }
+
+    @Override
+    public void onPermissionDeclined() {
+        isLocationPermissionAccepted = false;
+    }
+
+    @Override
+    public void onLocationResult(Location location) {
+        LocationUtils.LocationPermissionResult.super.onLocationResult(location);
+
+        isLocationPermissionAccepted = true;
+        setLocation(location);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        locationUtils = new LocationUtils(this);
     }
 }

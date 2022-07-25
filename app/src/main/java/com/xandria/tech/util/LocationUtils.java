@@ -1,6 +1,7 @@
 package com.xandria.tech.util;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.xandria.tech.dto.Location;
 
 import java.io.IOException;
 import java.util.List;
@@ -48,6 +50,7 @@ public class LocationUtils {
                     if (location != null) {
                         latLng = new LatLng(location.getLatitude(), location.getLongitude());
                         permissionResult.onPermissionGranted(getLatLng());
+                        permissionResult.onLocationResult(getCurrentLoc());
                     }
                 });
             } else {
@@ -60,6 +63,22 @@ public class LocationUtils {
     public LocationUtils(AppCompatActivity activity){
         this.context = activity;
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+        this.permissionResult = (LocationPermissionResult) activity;
+
+        requestPermissionLauncher = activity.registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if (isGranted) {
+                mFusedLocationClient.getLastLocation().addOnSuccessListener(activity, location -> {
+                    if (location != null) {
+                        latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                        permissionResult.onPermissionGranted(getLatLng());
+                        permissionResult.onLocationResult(getCurrentLoc());
+                    }
+                });
+            } else {
+                permissionResult.onPermissionDeclined();
+            }
+        });
+        checkLocationInActivity();
     }
 
     private void checkLocationInFragment(){
@@ -69,7 +88,23 @@ public class LocationUtils {
             mFusedLocationClient.getLastLocation().addOnSuccessListener(fragment.getActivity(), location -> {
                 if (location != null) {
                     latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    permissionResult.onPermissionGranted(latLng);
+                    permissionResult.onPermissionGranted(getLatLng());
+                    permissionResult.onLocationResult(getCurrentLoc());
+                }
+            });
+        }
+    }
+
+    private void checkLocationInActivity(){
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+        } else {
+            // already permission granted
+            mFusedLocationClient.getLastLocation().addOnSuccessListener((Activity) context, location -> {
+                if (location != null) {
+                    latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    permissionResult.onPermissionGranted(getLatLng());
+                    permissionResult.onLocationResult(getCurrentLoc());
                 }
             });
         }
@@ -201,8 +236,26 @@ public class LocationUtils {
             return null;
         }
     }
+
+    public Location getCurrentLoc() {
+        if (getLatLng() != null) {
+            Location location = new Location(
+                    getAddressLine(),
+                    getLatLng().longitude,
+                    getLatLng().latitude
+            );
+            location.setLocality(getLocality());
+            location.setStreetAddress(getStreet());
+            location.setPinCode(getPostalCode());
+            location.setCity(getCity());
+            return location;
+        }
+        return null;
+    }
+
     public interface LocationPermissionResult{
         void onPermissionGranted(LatLng latLng);
         void onPermissionDeclined();
+        default void onLocationResult(Location location){}
     }
 }

@@ -100,7 +100,7 @@ public class OrderRouteMapFragment extends Fragment implements LocationUtils.Loc
 
             LatLng currentLocation = new LatLng(currentLatitude, currentLongitude);
             currentLocationMarker = googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Current location"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 12));
         }
     }
 
@@ -131,6 +131,8 @@ public class OrderRouteMapFragment extends Fragment implements LocationUtils.Loc
     public void onPermissionGranted(LatLng latLng) {
         currentLatitude = latLng.latitude;
         currentLongitude = latLng.longitude;
+
+        createMarkerForCurrentLoc();
     }
 
     @Override

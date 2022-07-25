@@ -18,12 +18,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.razorpay.PaymentResultListener;
 import com.xandria.tech.activity.user.LoginActivity;
 import com.xandria.tech.constants.Categories;
 import com.xandria.tech.constants.LoggedInUser;
+import com.xandria.tech.dto.Location;
 import com.xandria.tech.fragment.DiscussionFragment;
 import com.xandria.tech.fragment.MainFragment;
 import com.xandria.tech.fragment.MapsFragment;
@@ -32,11 +34,14 @@ import com.xandria.tech.fragment.OrdersFragment;
 import com.xandria.tech.fragment.ProfileFragment;
 import com.xandria.tech.fragment.RequestFragment;
 import com.xandria.tech.fragment.ReturnedOrdersFragment;
+import com.xandria.tech.util.LocationUtils;
 
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener, PaymentResultListener {
+public class MainActivity extends AppCompatActivity implements PaymentResultListener,
+        NavigationView.OnNavigationItemSelectedListener, LocationUtils.LocationPermissionResult  {
+    LocationUtils locationUtils;
+    private Location location;
 
     View headerView;
     @Override
@@ -179,5 +184,33 @@ public class MainActivity extends AppCompatActivity implements
         FragmentManager fm =  getSupportFragmentManager();
         ProfileFragment profileFragment = (ProfileFragment) fm.findFragmentById(R.id.content_frame);
         if (profileFragment != null) profileFragment.handlePaymentComplete(false);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        locationUtils = new LocationUtils(this);
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    @Override
+    public void onPermissionGranted(LatLng latLng) {}
+
+    @Override
+    public void onPermissionDeclined() {}
+
+    @Override
+    public void onLocationResult(Location location) {
+        LocationUtils.LocationPermissionResult.super.onLocationResult(location);
+
+        setLocation(location);
     }
 }

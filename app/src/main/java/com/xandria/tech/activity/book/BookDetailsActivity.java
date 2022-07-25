@@ -1,8 +1,5 @@
 package com.xandria.tech.activity.book;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.text.HtmlCompat;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,11 +8,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.text.HtmlCompat;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
-import com.xandria.tech.activity.order.CreateOrderActivity;
 import com.xandria.tech.MainActivity;
 import com.xandria.tech.R;
+import com.xandria.tech.activity.order.CreateOrderActivity;
 import com.xandria.tech.model.BookRecyclerModel;
 
 import java.util.Objects;
@@ -136,4 +136,5 @@ public class BookDetailsActivity extends AppCompatActivity {
         }
         Picasso.get().load(book.getThumbnail()).into(bookImage);
     }
+
 }

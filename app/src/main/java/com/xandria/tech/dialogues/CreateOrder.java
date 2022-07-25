@@ -16,7 +16,6 @@ import android.widget.ViewSwitcher;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.hbb20.CountryCodePicker;
+import com.xandria.tech.MainActivity;
 import com.xandria.tech.R;
 import com.xandria.tech.activity.order.OrderRouteActivity;
 import com.xandria.tech.constants.FirebaseRefs;
@@ -35,7 +35,6 @@ import com.xandria.tech.dto.Location;
 import com.xandria.tech.model.BookRecyclerModel;
 import com.xandria.tech.model.OrdersModel;
 import com.xandria.tech.model.User;
-import com.xandria.tech.util.LocationUtils;
 
 import java.util.Objects;
 
@@ -190,12 +189,13 @@ public class CreateOrder {
             dialog.onBackPressed();
         });
         useCurrent.setOnClickListener(v -> {
-            Location location = getCurrentLoc();
-            if (location != null) {
+            Location location = ((MainActivity) context).getLocation();
+
+            if (location != null) { // most likely it will be null
                 createOrder(location);
                 dialog.onBackPressed();
             }
-            else Toast.makeText(context, "Location permissions are needed to proceed", Toast.LENGTH_LONG).show();
+            else Toast.makeText(context, "Location could not be determined", Toast.LENGTH_LONG).show();
         });
 
         dialog.show();
@@ -254,22 +254,5 @@ public class CreateOrder {
             firebaseDatabaseRef.child(newOrder.getOrderId()).child(newOrder.getBookId()).setValue(newOrder);
             Toast.makeText(context, "Order Created", Toast.LENGTH_LONG).show();
         } else Toast.makeText(context, "You need more than " + book.getValue() + " points to complete this order", Toast.LENGTH_LONG).show();
-    }
-
-    private Location getCurrentLoc() {
-        LocationUtils locationUtils = new LocationUtils((AppCompatActivity) context);
-        if (locationUtils.getLatLng() != null) {
-            Location location = new Location(
-                    locationUtils.getAddressLine(),
-                    locationUtils.getLatLng().longitude,
-                    locationUtils.getLatLng().latitude
-            );
-            location.setLocality(locationUtils.getLocality());
-            location.setStreetAddress(locationUtils.getStreet());
-            location.setPinCode(locationUtils.getPostalCode());
-            location.setCity(locationUtils.getCity());
-            return location;
-        }
-        return null;
     }
 }
