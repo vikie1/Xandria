@@ -43,6 +43,7 @@ import java.util.Objects;
 public class AddBookActivity extends AppCompatActivity implements LocationUtils.LocationPermissionResult{
     public static final String EXTRA_BOOK_REQUEST = "request";
     public static final String EXTRA_IS_MANUAL_INPUT = "manualInput";
+    public static final String EXTRA_FULFILL_REQUEST = "Fulfill book request";
 
     private TextInputEditText bookTitle, bookSubTitle, bookAuthorName, bookImageLink, bookDescription, bookPagesNo;
     private FirebaseDatabase fireDb;
@@ -61,11 +62,15 @@ public class AddBookActivity extends AppCompatActivity implements LocationUtils.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_book);
 
-        if (getIntent().hasExtra(EXTRA_IS_MANUAL_INPUT)
-                && (boolean) getIntent().getExtras().get(EXTRA_IS_MANUAL_INPUT)
-        ) {
-//            viewSwitcher = findViewById(R.id.google_books_manual_input_switch);
-//            viewSwitcher.setDisplayedChild(1);
+        fireDb = FirebaseDatabase.getInstance();
+        if (getIntent().hasExtra(EXTRA_BOOK_REQUEST) && (boolean) getIntent().getExtras().get(EXTRA_BOOK_REQUEST)) {
+            DbReference = fireDb.getReference(FirebaseRefs.BOOK_REQUESTS);
+            request = true;
+        } else DbReference = fireDb.getReference(FirebaseRefs.BOOKS);
+
+        BookRecyclerModel book = getIntent().getParcelableExtra(EXTRA_FULFILL_REQUEST);
+        if (book != null) addBookValue(book);
+        else {
             bookTitle = findViewById(R.id.bookTitle);
             bookSubTitle = findViewById(R.id.bookSubTitle);
             bookAuthorName = findViewById(R.id.authorName);
@@ -73,13 +78,8 @@ public class AddBookActivity extends AppCompatActivity implements LocationUtils.
             bookPagesNo = findViewById(R.id.PagesNo);
             bookDescription = findViewById(R.id.bookDescription);
             onAddBookClicked();
-        } else allowSearch();
-
-        fireDb = FirebaseDatabase.getInstance();
-        if (getIntent().hasExtra(EXTRA_BOOK_REQUEST) && (boolean) getIntent().getExtras().get(EXTRA_BOOK_REQUEST)) {
-            DbReference = fireDb.getReference(FirebaseRefs.BOOK_REQUESTS);
-            request = true;
-        } else DbReference = fireDb.getReference(FirebaseRefs.BOOKS);
+            allowSearch();
+        }
 
         Button cancelButton = findViewById(R.id.addBookCancelBtn);
         cancelButton.setOnClickListener(view -> startActivity(new Intent(AddBookActivity.this, MainActivity.class)));
@@ -131,7 +131,8 @@ public class AddBookActivity extends AppCompatActivity implements LocationUtils.
         bookList.setOnItemClickListener((parent, view, position, id) -> {
             BookRecyclerModel googleBook = googleBooksListViewAdapter.getItem(position);
             googleBook.setUserId(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail());
-            if (!request) addBookValue(googleBook); //
+            if (!request) addBookValue(googleBook);
+            else saveBook(googleBook);
         });
     }
 
@@ -173,7 +174,7 @@ public class AddBookActivity extends AppCompatActivity implements LocationUtils.
         }
     }
 
-    void onAddBookClicked(){
+    private void onAddBookClicked(){
         Button addBookBtn = findViewById(R.id.addBookBtn);
         addBookBtn.setOnClickListener(view -> {
             String bookTitleStr = Objects.requireNonNull(bookTitle.getText()).toString();
@@ -189,6 +190,7 @@ public class AddBookActivity extends AppCompatActivity implements LocationUtils.
             );
             booksModel.setUserId(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail());
             if (!request) addBookValue(booksModel);
+            else saveBook(booksModel);
         });
     }
 

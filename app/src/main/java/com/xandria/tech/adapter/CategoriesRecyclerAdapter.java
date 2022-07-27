@@ -1,6 +1,7 @@
 package com.xandria.tech.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.xandria.tech.R;
 
 import java.util.List;
+import java.util.Random;
 
 public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRecyclerAdapter.ViewHolder>{
     private final List<String> categories;
@@ -36,6 +38,23 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
         String category = categories.get(position);
         holder.categoryView.setText(category);
         holder.categoryView.setOnClickListener(v -> categoryClicked.onCategoryClick(category));
+
+        // add colors
+        if (position == 0){
+            holder.categoryView.setBackgroundColor(Color.WHITE);
+            holder.categoryView.setTextColor(Color.BLACK);
+        }
+        else if (position == categories.size() -1){
+            holder.categoryView.setBackgroundColor(Color.BLACK);
+            holder.categoryView.setTextColor(Color.WHITE);
+        }
+        else {
+            Random r = new Random();
+            int red = r.nextInt(255);
+            int green = r.nextInt(255);
+            int blue = r.nextInt(255);
+            holder.categoryView.setBackgroundColor(Color.rgb(red, green, blue));
+        }
     }
 
     @Override

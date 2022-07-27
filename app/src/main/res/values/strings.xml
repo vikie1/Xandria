@@ -33,7 +33,7 @@
     <string name="book_requests">Book Requests</string>
     <string name="create_request_fab">Create Request Fab</string>
     <string name="enter_message">Enter Message</string>
-    <string name="discussion">General Discussion</string>
+    <string name="discussion">Book Recommendations</string>
     <string name="send_button">Send button</string>
     <string name="logout">Logout</string>
     <string name="account">Account</string>

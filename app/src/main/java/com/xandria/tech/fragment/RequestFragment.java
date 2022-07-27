@@ -62,17 +62,9 @@ public class RequestFragment extends Fragment implements BookRecyclerAdapter.Boo
         // will just use the add book activity for the book request
         // and use an extra parameter to show its not an actual book but a requested one
         newRequestFab.setOnClickListener(view -> {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(context); // allow users to select either the Google books input option or the manual input option
-            alertDialog.setTitle("Select book input option");
-            alertDialog.setItems(new CharSequence[]{"Google Books", "Manual Input"},
-                    (dialog, which) -> {
-                        Intent intent = new Intent(context, AddBookActivity.class);
-                        intent.putExtra(AddBookActivity.EXTRA_IS_MANUAL_INPUT, which != 0);
-                        intent.putExtra(AddBookActivity.EXTRA_BOOK_REQUEST, true);
-                        startActivity(intent);
-                    }
-            );
-            alertDialog.create().show();
+            Intent intent = new Intent(context, AddBookActivity.class);
+            intent.putExtra(AddBookActivity.EXTRA_BOOK_REQUEST, true);
+            startActivity(intent);
         });
 
         getAllBooks();
@@ -118,7 +110,12 @@ public class RequestFragment extends Fragment implements BookRecyclerAdapter.Boo
         alertDialog.setTitle("If you have the book, add it.");
         alertDialog.setItems(new CharSequence[]{"Add the book"},
                 (dialog, which) -> {
-                    if (which == 0) saveBook(bookRecyclerModelArrayList.get(position));
+//                    if (which == 0) saveBook(bookRecyclerModelArrayList.get(position));
+                    if (which == 0){
+                        Intent intent = new Intent(context, AddBookActivity.class);
+                        intent.putExtra(AddBookActivity.EXTRA_FULFILL_REQUEST, bookRecyclerModelArrayList.get(position));
+                        startActivity(intent);
+                    }
                 }
         );
         alertDialog.create().show();
