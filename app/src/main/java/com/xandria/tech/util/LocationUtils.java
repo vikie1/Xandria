@@ -15,7 +15,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.google.android.gms.maps.model.LatLng;
 import com.xandria.tech.dto.Location;
 
@@ -28,12 +32,13 @@ import java.util.Locale;
  * if there is an issue with current user location, you know where to check
  */
 public class LocationUtils {
-    private FusedLocationProviderClient mFusedLocationClient;
-    private ActivityResultLauncher<String> requestPermissionLauncher;
-    private LocationPermissionResult permissionResult;
+    private final FusedLocationProviderClient mFusedLocationClient;
+    private final ActivityResultLauncher<String> requestPermissionLauncher;
+    private final LocationPermissionResult permissionResult;
+
+    private LocationCallback locationCallback;
 
     private static final String TAG = LocationUtils.class.getName();
-    private final int locationRequestCode = 1000;
     private LatLng latLng;
     private final Context context;
     private Fragment fragment;
@@ -51,6 +56,7 @@ public class LocationUtils {
                         latLng = new LatLng(location.getLatitude(), location.getLongitude());
                         permissionResult.onPermissionGranted(getLatLng());
                         permissionResult.onLocationResult(getCurrentLoc());
+                        mFusedLocationClient.removeLocationUpdates(locationCallback);
                     }
                 });
             } else {
@@ -59,7 +65,34 @@ public class LocationUtils {
         });
 
         checkLocationInFragment();
+        createLocationRequest();
     }
+
+    private void createLocationRequest() {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(Priority.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(20 * 1000);
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                for (android.location.Location location : locationResult.getLocations()) {
+                    if (location != null) {
+                        latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                        permissionResult.onPermissionGranted(getLatLng());
+                        permissionResult.onLocationResult(getCurrentLoc());
+                    }
+                    if (mFusedLocationClient != null) {
+                        mFusedLocationClient.removeLocationUpdates(locationCallback);
+                    }
+                }
+            }
+        };
+    }
+
     public LocationUtils(AppCompatActivity activity){
         this.context = activity;
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
@@ -72,13 +105,16 @@ public class LocationUtils {
                         latLng = new LatLng(location.getLatitude(), location.getLongitude());
                         permissionResult.onPermissionGranted(getLatLng());
                         permissionResult.onLocationResult(getCurrentLoc());
+                        mFusedLocationClient.removeLocationUpdates(locationCallback);
                     }
                 });
             } else {
                 permissionResult.onPermissionDeclined();
             }
         });
+
         checkLocationInActivity();
+        createLocationRequest();
     }
 
     private void checkLocationInFragment(){
@@ -90,6 +126,7 @@ public class LocationUtils {
                     latLng = new LatLng(location.getLatitude(), location.getLongitude());
                     permissionResult.onPermissionGranted(getLatLng());
                     permissionResult.onLocationResult(getCurrentLoc());
+                    mFusedLocationClient.removeLocationUpdates(locationCallback);
                 }
             });
         }
@@ -105,6 +142,7 @@ public class LocationUtils {
                     latLng = new LatLng(location.getLatitude(), location.getLongitude());
                     permissionResult.onPermissionGranted(getLatLng());
                     permissionResult.onLocationResult(getCurrentLoc());
+                    mFusedLocationClient.removeLocationUpdates(locationCallback);
                 }
             });
         }
