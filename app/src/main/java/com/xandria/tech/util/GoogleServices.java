@@ -141,7 +141,10 @@ public class GoogleServices {
                 e.printStackTrace();
             }
             try {
-                book.setCategory(currentBook.getJSONArray("categories").join(","));
+                book.setCategory(
+                        currentBook.getJSONArray("categories")
+                                .join(",")
+                                .replace("\"", ""));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

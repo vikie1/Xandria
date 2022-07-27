@@ -7,17 +7,23 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -28,9 +34,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.xandria.tech.MainActivity;
 import com.xandria.tech.R;
 import com.xandria.tech.adapter.GoogleBooksListViewAdapter;
+import com.xandria.tech.constants.Categories;
 import com.xandria.tech.constants.FirebaseRefs;
 import com.xandria.tech.dto.Location;
 import com.xandria.tech.model.BookRecyclerModel;
+import com.xandria.tech.model.CategoryModel;
 import com.xandria.tech.util.GoogleServices;
 import com.xandria.tech.util.LocationUtils;
 import com.xandria.tech.util.Points;
@@ -134,7 +142,8 @@ public class AddBookActivity extends AppCompatActivity implements LocationUtils.
         bookList.setOnItemClickListener((parent, view, position, id) -> {
             BookRecyclerModel googleBook = googleBooksListViewAdapter.getItem(position);
             googleBook.setUserId(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail());
-            if (!request) addBookValue(googleBook);
+//            if (!request) addBookValue(googleBook);
+            if (!request) addCategories(googleBook);
             else saveBook(googleBook);
         });
     }
@@ -197,7 +206,8 @@ public class AddBookActivity extends AppCompatActivity implements LocationUtils.
                     bookTitleStr.replaceAll("[\\-+.^:,]","_")
             );
             booksModel.setUserId(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail());
-            if (!request) addBookValue(booksModel);
+//            if (!request) addBookValue(booksModel);
+            if (!request) addCategories(booksModel);
             else saveBook(booksModel);
         });
     }
@@ -259,12 +269,64 @@ public class AddBookActivity extends AppCompatActivity implements LocationUtils.
         dialog.show();
     }
 
+    private List<String> categories = new ArrayList<>();
+    private void addChip(String name, ChipGroup chipGroup){
+        Chip chip = new Chip(this);
+        chip.setText(name);
+        chip.setCloseIconVisible(true);
+        chip.setId(ViewCompat.generateViewId());
+        chipGroup.addView(chip);
+        categories.add(name);
+        chip.setOnCloseIconClickListener(view -> {
+            chipGroup.removeView(chip);
+            categories.remove(name);
+        });
+    }
+
+    private void addCategories(BookRecyclerModel book){
+        Dialog dialog = new Dialog(AddBookActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.categories_input);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.black)));
+
+        Spinner mainCategoriesSpinner = dialog.findViewById(R.id.main_categories_spinner);
+        ChipGroup chipGroup = dialog.findViewById(R.id.categories_list_chips);
+        TextInputEditText subCategoryInput = dialog.findViewById(R.id.add_sub_category_input);
+        ImageButton addSubCategoryBtn = dialog.findViewById(R.id.add_sub_category);
+        Button confirmBtn = dialog.findViewById(R.id.confirm_button);
+
+        // populate spinner
+        ArrayAdapter<String> mainCategories = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Categories.categories);
+        mainCategoriesSpinner.setAdapter(mainCategories);
+
+        if (book.getCategory() != null) // google books already have categories
+            addChip(book.getCategory(), chipGroup);
+        addSubCategoryBtn.setOnClickListener(view -> {
+            if (subCategoryInput.getText() != null) addChip(subCategoryInput.getText().toString(), chipGroup);
+            subCategoryInput.setText("");
+        });
+
+        confirmBtn.setOnClickListener(view -> {
+            String mainCategory = String.valueOf(mainCategoriesSpinner.getSelectedItem());
+            CategoryModel categoryModel = new CategoryModel(mainCategory, categories);
+            DatabaseReference catDbReference = FirebaseDatabase.getInstance().getReference(FirebaseRefs.CATEGORIES);
+            catDbReference.child(mainCategory).setValue(categoryModel);
+
+            categories.add(mainCategory);
+            book.setCategory(String.join(", ", categories));
+            dialog.dismiss();
+            addBookValue(book);
+        });
+        dialog.show();
+    }
+
     private void addBookValue(BookRecyclerModel book){
         Dialog dialog = new Dialog(AddBookActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.value_input_dialogue);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.black)));
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.black)));
 
         ImageButton cancelButton = dialog.findViewById(R.id.cancel_button);
         TextView positivePart = dialog.findViewById(R.id.positive_number_input);

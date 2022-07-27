@@ -108,4 +108,6 @@
     <string name="verification_code">Verification Code</string>
     <string name="verify">Verify</string>
     <string name="register">Register</string>
+    <string name="add_categories">Add Categories</string>
+    <string name="add_sub_category">Add Sub-Category</string>
 </resources>
