@@ -42,7 +42,6 @@ import java.util.Objects;
 
 public class AddBookActivity extends AppCompatActivity implements LocationUtils.LocationPermissionResult{
     public static final String EXTRA_BOOK_REQUEST = "request";
-    public static final String EXTRA_IS_MANUAL_INPUT = "manualInput";
     public static final String EXTRA_FULFILL_REQUEST = "Fulfill book request";
 
     private TextInputEditText bookTitle, bookSubTitle, bookAuthorName, bookImageLink, bookDescription, bookPagesNo;
@@ -51,6 +50,7 @@ public class AddBookActivity extends AppCompatActivity implements LocationUtils.
 
     GoogleBooksListViewAdapter googleBooksListViewAdapter;
     private boolean request;
+    private boolean isFulfilRequest = false;
 
     LocationUtils locationUtils;
     private Location location;
@@ -69,7 +69,10 @@ public class AddBookActivity extends AppCompatActivity implements LocationUtils.
         } else DbReference = fireDb.getReference(FirebaseRefs.BOOKS);
 
         BookRecyclerModel book = getIntent().getParcelableExtra(EXTRA_FULFILL_REQUEST);
-        if (book != null) addBookValue(book);
+        if (book != null) {
+            addBookValue(book);
+            isFulfilRequest = true;
+        }
         else {
             bookTitle = findViewById(R.id.bookTitle);
             bookSubTitle = findViewById(R.id.bookSubTitle);
@@ -169,6 +172,11 @@ public class AddBookActivity extends AppCompatActivity implements LocationUtils.
         } else {
             DbReference.child(book.getBookID()).setValue(book);
             Toast.makeText(AddBookActivity.this, "Book Added..", Toast.LENGTH_SHORT).show();
+
+            if (isFulfilRequest){ // if request is fulfilled then remove from the book requests
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference(FirebaseRefs.BOOK_REQUESTS);
+                reference.child(book.getBookID()).removeValue();
+            }
             startActivity(new Intent(AddBookActivity.this, MainActivity.class));
             AddBookActivity.this.finish();
         }
