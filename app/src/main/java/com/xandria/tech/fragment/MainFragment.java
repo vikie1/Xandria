@@ -233,8 +233,6 @@ public class MainFragment extends Fragment implements BookRecyclerAdapter.BookCl
 
                         if (!bookRecyclerModels.contains(bookRecyclerModel))
                             bookRecyclerModels.add(bookRecyclerModel);
-                        System.out.println(bookRecyclerModel);
-                        System.out.println(category);
                         pastMainCat = true;
                     }
                 }
