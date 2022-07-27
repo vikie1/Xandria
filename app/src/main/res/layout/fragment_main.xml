@@ -4,6 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.MainFragment">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -38,6 +41,7 @@
             android:id="@+id/bookRecycler"/>
 
     </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
@@ -49,6 +53,7 @@
         android:background="@color/marron_shade"
         android:src="@drawable/ic_baseline_add_24"
         android:contentDescription="@string/add_book_fab" />
+
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

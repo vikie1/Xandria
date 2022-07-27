@@ -10,6 +10,7 @@ import android.util.Log;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -75,17 +76,12 @@ public class LocationUtils {
 
         locationCallback = new LocationCallback() {
             @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
+            public void onLocationResult(@NonNull LocationResult locationResult) {
                 for (android.location.Location location : locationResult.getLocations()) {
                     if (location != null) {
                         latLng = new LatLng(location.getLatitude(), location.getLongitude());
                         permissionResult.onPermissionGranted(getLatLng());
                         permissionResult.onLocationResult(getCurrentLoc());
-                    }
-                    if (mFusedLocationClient != null) {
                         mFusedLocationClient.removeLocationUpdates(locationCallback);
                     }
                 }
@@ -112,7 +108,6 @@ public class LocationUtils {
                 permissionResult.onPermissionDeclined();
             }
         });
-
         checkLocationInActivity();
         createLocationRequest();
     }
