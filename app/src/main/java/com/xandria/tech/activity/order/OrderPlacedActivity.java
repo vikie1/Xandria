@@ -71,6 +71,7 @@ public class OrderPlacedActivity extends AppCompatActivity {
 
         if (!isMyBook && order.isReturned()) {
             returnBook.setVisibility(View.GONE); // no need to display if book has been returned
+            confirmReception.setVisibility(View.GONE); // Only book owner should confirm reception of book
             status.setText(HtmlCompat.fromHtml(
                     getString(R.string.return_status).concat(" ").concat("Pending"),
                     HtmlCompat.FROM_HTML_MODE_COMPACT
