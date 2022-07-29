@@ -15,7 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Xandria"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".CategorisedBooksActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.order.OrderRouteActivity"
             android:exported="false" />

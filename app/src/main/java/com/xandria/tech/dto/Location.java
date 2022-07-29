@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.maps.model.LatLng;
 import com.xandria.tech.util.GoogleServices;
 
+import java.util.Objects;
+
 public class Location implements Parcelable {
     private String streetAddress;
     private String address;
@@ -165,5 +167,25 @@ public class Location implements Parcelable {
             dest.writeByte((byte) 1);
             dest.writeDouble(latitude);
         }
+    }
+
+    // for comparisons
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Location location = (Location) o;
+        return Objects.equals(getStreetAddress(), location.getStreetAddress()) &&
+                Objects.equals(getAddress(), location.getAddress()) &&
+                Objects.equals(getLocality(), location.getLocality()) &&
+                Objects.equals(getCity(), location.getCity()) &&
+                Objects.equals(getPinCode(), location.getPinCode()) &&
+                Objects.equals(getLongitude(), location.getLongitude()) &&
+                Objects.equals(getLatitude(), location.getLatitude());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getStreetAddress(), getAddress(), getLocality(), getCity(), getPinCode(), getLongitude(), getLatitude());
     }
 }

@@ -35,7 +35,7 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String category = categories.get(position);
         holder.categoryView.setText(category);
-        holder.romanNumView.setText("IIIX");
+        holder.romanNumView.setText(getRomanFromInt(position+1));
         holder.categoryView.setOnClickListener(v -> categoryClicked.onCategoryClick(category));
 
         // add colors
@@ -55,6 +55,24 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
 //            holder.categoryView.setBackgroundColor(Color.rgb(red, green, blue));
 //        }
 //        System.out.println();
+    }
+
+    private String getRomanFromInt(int decimal){
+        switch (decimal){
+            case 1: return "I";
+            case 2: return "II";
+            case 3: return "III";
+            case 4: return "IV";
+            case 5: return "V";
+            case 6: return "VI";
+            case 7: return "VII";
+            case 8: return "VIII";
+            case 9: return "IX";
+            case 10: return "X";
+            case 11: return "XI";
+            case 12: return "XII";
+            default: return "N/A";
+        }
     }
 
     @Override

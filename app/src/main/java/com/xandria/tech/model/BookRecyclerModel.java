@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 
 import com.xandria.tech.dto.Location;
 
+import java.util.Objects;
+
 public class BookRecyclerModel implements Parcelable {
     private String bookID;
     private String title;
@@ -249,5 +251,33 @@ public class BookRecyclerModel implements Parcelable {
                 ", ISBN='" + ISBN + "'\n" +
                 ", Category='" + category + "'\n" +
                 "}\n\n";
+    }
+
+    // for comparisons
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BookRecyclerModel that = (BookRecyclerModel) o;
+        return Double.compare(that.getValue(), getValue()) == 0 &&
+                Objects.equals(getBookID(), that.getBookID()) &&
+                getTitle().equals(that.getTitle()) &&
+                Objects.equals(getSubtitle(), that.getSubtitle()) &&
+                Objects.equals(getAuthors(), that.getAuthors()) &&
+                Objects.equals(getPublisher(), that.getPublisher()) &&
+                Objects.equals(getPublishedDate(), that.getPublishedDate()) &&
+                Objects.equals(getDescription(), that.getDescription()) &&
+                Objects.equals(getPageCount(), that.getPageCount()) &&
+                Objects.equals(getUserId(), that.getUserId()) &&
+                Objects.equals(getThumbnail(), that.getThumbnail()) &&
+                Objects.equals(getPreviewLink(), that.getPreviewLink()) &&
+                Objects.equals(getISBN(), that.getISBN()) &&
+                Objects.equals(getCategory(), that.getCategory()) &&
+                Objects.equals(getLocation(), that.getLocation());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getBookID(), getTitle(), getSubtitle(), getAuthors(), getPublisher(), getPublishedDate(), getDescription(), getPageCount(), getUserId(), getThumbnail(), getPreviewLink(), getISBN(), getCategory(), getLocation(), getValue());
     }
 }
