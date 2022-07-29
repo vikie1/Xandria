@@ -1,7 +1,6 @@
 package com.xandria.tech.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.xandria.tech.R;
 
 import java.util.List;
-import java.util.Random;
 
 public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRecyclerAdapter.ViewHolder>{
     private final List<String> categories;
@@ -37,24 +35,26 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String category = categories.get(position);
         holder.categoryView.setText(category);
+        holder.romanNumView.setText("IIIX");
         holder.categoryView.setOnClickListener(v -> categoryClicked.onCategoryClick(category));
 
         // add colors
-        if (position == 0){
-            holder.categoryView.setBackgroundColor(Color.WHITE);
-            holder.categoryView.setTextColor(Color.BLACK);
-        }
-        else if (position == categories.size() -1){
-            holder.categoryView.setBackgroundColor(Color.BLACK);
-            holder.categoryView.setTextColor(Color.WHITE);
-        }
-        else {
-            Random r = new Random();
-            int red = r.nextInt(255);
-            int green = r.nextInt(255);
-            int blue = r.nextInt(255);
-            holder.categoryView.setBackgroundColor(Color.rgb(red, green, blue));
-        }
+//        if (position == 0){
+//            holder.categoryView.setBackgroundColor(Color.WHITE);
+//            holder.categoryView.setTextColor(Color.BLACK);
+//        }
+//        else if (position == categories.size() -1){
+//            holder.categoryView.setBackgroundColor(Color.BLACK);
+//            holder.categoryView.setTextColor(Color.WHITE);
+//        }
+//        else {
+//            Random r = new Random();
+//            int red = r.nextInt(255);
+//            int green = r.nextInt(255);
+//            int blue = r.nextInt(255);
+//            holder.categoryView.setBackgroundColor(Color.rgb(red, green, blue));
+//        }
+//        System.out.println();
     }
 
     @Override
@@ -64,10 +64,12 @@ public class CategoriesRecyclerAdapter extends RecyclerView.Adapter<CategoriesRe
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         private final TextView categoryView;
+        private final TextView romanNumView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             categoryView = itemView.findViewById(R.id.simple_list_text);
+            romanNumView = itemView.findViewById(R.id.simple_list_text_label);
         }
     }
 

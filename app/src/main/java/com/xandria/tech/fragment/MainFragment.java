@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -70,10 +71,11 @@ public class MainFragment extends Fragment implements BookRecyclerAdapter.BookCl
 
         bookRecycler = view.findViewById(R.id.bookRecycler);
         RecyclerView categoriesRecycler = view.findViewById(R.id.categories_list);
+        bottom_sheet = view.findViewById(R.id.bottomSheet);
+
+        mAuth = FirebaseAuth.getInstance();
         FirebaseDatabase fireDb = FirebaseDatabase.getInstance();
         DbReference = fireDb.getReference(FirebaseRefs.BOOKS);
-        bottom_sheet = view.findViewById(R.id.bottomSheet);
-        mAuth = FirebaseAuth.getInstance();
 
         // I have commented on this part so that you can place categories as you said in the call
         // It was still far from done so feel free to start afresh
@@ -93,6 +95,17 @@ public class MainFragment extends Fragment implements BookRecyclerAdapter.BookCl
         onFabClicked();
 
         getAllBooks();
+
+        // scroll categories recycler on left and right image buttons click
+        ImageButton leftScrollBtn = view.findViewById(R.id.scroll_back_btn);
+        ImageButton rightScrollBtn = view.findViewById(R.id.scroll_forward_btn);
+
+        leftScrollBtn.setOnClickListener(v -> categoriesRecycler.getLayoutManager()
+                .scrollToPosition(linearLayoutManager.findFirstVisibleItemPosition()-1)
+        );
+        rightScrollBtn.setOnClickListener(v -> categoriesRecycler.getLayoutManager()
+                .scrollToPosition(linearLayoutManager.findLastVisibleItemPosition()+1)
+        );
 
         // Inflate the layout for this fragment
         return view;

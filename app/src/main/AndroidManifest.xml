@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.xandria.tech">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -15,8 +14,7 @@
         android:roundIcon="@drawable/xandria"
         android:supportsRtl="true"
         android:theme="@style/Theme.Xandria"
-        android:usesCleartextTraffic="true"
-        tools:targetApi="m">
+        android:usesCleartextTraffic="true">
 
         <activity
             android:name=".activity.order.OrderRouteActivity"
